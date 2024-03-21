@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import Colors from "../constants/colors";
-
+import Header from "../components/Header";
 import DashboardScreen from "../screens/DashboardScreen";
 import ShiftsScreen from "../screens/ShiftsScreen";
 import TimesheetScreen from "../screens/TimesheetScreen";
@@ -14,13 +14,13 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false,
+        header: ({ navigation, route, options }) => <Header />,
         tabBarStyle: {
           paddingTop: 8,
           backgroundColor: Colors.primary,
           minHeight: 60,
         },
-        tabBarActiveTintColor: Colors.secondary,
+        tabBarActiveTintColor: Colors.accent,
         tabBarInactiveTintColor: "white",
         tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
       }}

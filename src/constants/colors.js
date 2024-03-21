@@ -1,8 +1,16 @@
 const Colors = {
   primary: "#111f4d",
   secondary: "#2c4ebd",
-  accent: "#ffd3b6",
+  accent: "#ffd166",
   lightGray: "#dbd8d7",
 };
 
 export default Colors;
+
+/* possible accent colors
+84a98c
+ffd166
+b084cc
+f3a712
+e4572e
+*/
