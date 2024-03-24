@@ -1,4 +1,4 @@
-import User from "../models/user";
+import User from "../models/User";
 
 const imagePath =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWvXbaMv4cP4DlP8BLXRwUPmrLY0Y5dOGE1g&usqp=CAU";

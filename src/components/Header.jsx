@@ -1,21 +1,28 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
 import Colors from "../constants/colors";
 
-const Header = () => {
+const Header = ({ navigation, route }) => {
+  const handlePress = () => {
+    navigation.navigate("profile");
+  };
+  const routeName = route.name[0].toUpperCase() + route.name.slice(1);
+
+  const textContent = routeName !== "Dashboard" ? routeName : "Business Name";
+
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
-        <Text style={styles.title}>Hello UserName!</Text>
-        <Text style={styles.text}>Business Name</Text>
+        <Text style={styles.title}>Hi UserName!</Text>
+        <Text style={styles.text}>{textContent}</Text>
       </View>
-      <View style={styles.subContainer}>
+      <Pressable style={styles.subContainer} onPress={handlePress}>
         <Image
           style={styles.image}
           source={require("../../assets/logoClockaburra.png")}
         />
         <Text style={styles.statusText}>Clocked Out</Text>
-      </View>
+      </Pressable>
     </View>
   );
 };
@@ -38,6 +45,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   text: {
+    fontWeight: "bold",
+    fontSize: 20,
     color: "white",
   },
   statusText: {

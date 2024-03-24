@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  dateText: { fontSize: 14, fontWeight: "500" },
+  dateText: { fontSize: 15, fontWeight: "bold" },
   earningsContainer: {
     backgroundColor: Colors.secondary,
     padding: 6,

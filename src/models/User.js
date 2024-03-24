@@ -12,11 +12,11 @@ class User {
     bankDetails
   ) {
     this.id = id;
-    this.rol = rol;
     this.isClockedIn = false;
     this.firstName = firstName;
     this.secondName = secondName;
     this.surname = surname;
+    this.rol = rol;
     this.email = email;
     this.cellphone = cellphone;
     this.image = image;

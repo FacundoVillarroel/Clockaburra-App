@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     backgroundColor: Colors.primary,
     borderRadius: 10,
+    elevation: 5,
   },
 });
 

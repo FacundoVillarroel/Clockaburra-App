@@ -14,7 +14,9 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        header: ({ navigation, route, options }) => <Header />,
+        header: ({ navigation, route, options }) => (
+          <Header navigation={navigation} route={route} />
+        ),
         tabBarStyle: {
           paddingTop: 8,
           backgroundColor: Colors.primary,
@@ -59,6 +61,7 @@ const BottomTabs = () => {
         name="profile"
         component={ProfileScreen}
         options={{
+          headerShown: false,
           tabBarLabel: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" color={color} size={size} />
