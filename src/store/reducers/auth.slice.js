@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { saveToken, deleteToken, decodeToken } from "../../helpers/jwtHelpers";
 
 const initialState = {
-  isLoggedIn: false,
-  user: null,
+  token: null,
+  userId: null,
+  name: null,
 };
 
 const authSlice = createSlice({
@@ -10,17 +12,26 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     log_in: (state, action) => {
-      state.isLoggedIn = true;
-      state.user = action.payload.user;
+      saveToken(action.payload.token);
+      state.token = action.payload.token;
+      state.userId = action.payload.userId;
+      state.name = action.payload.name;
     },
     log_out: (state) => {
-      state.isLoggedIn = false;
-      state.user = null;
+      deleteToken();
+      state.token = null;
+      state.userId = null;
+      state.name = null;
+    },
+    set_user: (state, action) => {
+      state.token = action.payload.token;
+      state.userId = action.payload.userId;
+      state.name = action.payload.name;
     },
   },
 });
 
-export const { log_in, log_out } = authSlice.actions;
+export const { log_in, log_out, set_user } = authSlice.actions;
 
 export default authSlice.reducer;
 
@@ -40,13 +51,31 @@ export const login = (email, password, setLoading) => {
       });
 
       const user = await response.json();
-      if (!user.token) {
+      const token = response.headers.get("Authorization").split(" ")[1];
+      if (!token) {
         setLoading(false);
         return { isError: true, message: "Email o contraseña inválidos" };
       }
       delete user.message;
-      dispatch(log_in(user));
+      dispatch(log_in({ ...user, token }));
       setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const setUser = (token) => {
+  return async (dispatch) => {
+    try {
+      const decodedToken = decodeToken(token);
+      dispatch(
+        set_user({
+          token,
+          userId: decodedToken.userId,
+          name: decodedToken.userName,
+        })
+      );
     } catch (error) {
       console.log(error);
     }

@@ -48,7 +48,7 @@ const LoginScreen = () => {
       const response = await dispatch(
         login(values.email, values.password, setIsLoading)
       );
-      if (response.isError) {
+      if (response) {
         Alert.alert("Error", response.message);
       }
     } catch (error) {

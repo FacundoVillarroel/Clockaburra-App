@@ -1,15 +1,33 @@
+import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loadToken } from "../helpers/jwtHelpers";
 
+import { setUser } from "../store/reducers/auth.slice";
 import BottomTabs from "./BottomTabs";
 import LoginScreen from "../screens/LoginScreen";
 
 const AppNavigator = () => {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const token = useSelector((state) => state.auth.token);
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  console.log("auth:", auth);
+
+  const initializeUser = async () => {
+    const token = await loadToken();
+    if (token) {
+      dispatch(setUser(token));
+    }
+  };
+
+  useEffect(() => {
+    initializeUser();
+  }, []);
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <BottomTabs /> : <LoginScreen />}
+      {token ? <BottomTabs /> : <LoginScreen />}
     </NavigationContainer>
   );
 };
