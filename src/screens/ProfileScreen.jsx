@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import ProfileHeader from "../components/profile/ProfileHeader";
+import Loading from "../components/loading/Loading";
 import Card from "../components/ui/Card";
 import Colors from "../constants/colors";
 
@@ -48,9 +49,7 @@ const ProfileScreen = () => {
   return (
     <>
       {isLoading ? (
-        <View>
-          <Text>Cargando...</Text>
-        </View>
+        <Loading />
       ) : (
         <View style={styles.rootContainer}>
           <ProfileHeader />

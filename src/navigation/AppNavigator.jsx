@@ -12,8 +12,6 @@ const AppNavigator = () => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  console.log("auth:", auth);
-
   const initializeUser = async () => {
     const token = await loadToken();
     if (token) {
