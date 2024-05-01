@@ -9,7 +9,6 @@ import LoginScreen from "../screens/LoginScreen";
 
 const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const initializeUser = async () => {
@@ -21,7 +20,7 @@ const AppNavigator = () => {
 
   useEffect(() => {
     initializeUser();
-  }, []);
+  }, [token]);
 
   return (
     <NavigationContainer>

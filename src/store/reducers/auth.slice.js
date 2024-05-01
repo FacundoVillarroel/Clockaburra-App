@@ -12,13 +12,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     log_in: (state, action) => {
-      saveToken(action.payload.token);
       state.token = action.payload.token;
       state.userId = action.payload.userId;
       state.name = action.payload.name;
     },
     log_out: (state) => {
-      deleteToken();
       state.token = null;
       state.userId = null;
       state.name = null;
@@ -39,7 +37,7 @@ export const login = (email, password, setLoading) => {
   return async (dispatch) => {
     try {
       setLoading(true);
-      const response = await fetch("http://192.168.0.90:8080/auth/login", {
+      const response = await fetch("http://192.168.1.101:8080/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,16 +49,18 @@ export const login = (email, password, setLoading) => {
       });
 
       const user = await response.json();
-      const token = response.headers.get("Authorization").split(" ")[1];
+      const token =
+        response.headers.get("Authorization")?.split(" ")[1] || null;
       if (!token) {
         setLoading(false);
         return { isError: true, message: "Email o contraseña inválidos" };
       }
       delete user.message;
+      await saveToken(token);
       dispatch(log_in({ ...user, token }));
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      throw new Error(error.message);
     }
   };
 };
@@ -69,6 +69,7 @@ export const setUser = (token) => {
   return async (dispatch) => {
     try {
       const decodedToken = decodeToken(token);
+      console.log("Decoded Token", decodedToken);
       dispatch(
         set_user({
           token,
@@ -76,6 +77,18 @@ export const setUser = (token) => {
           name: decodedToken.userName,
         })
       );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const logout = () => {
+  return async (dispatch) => {
+    try {
+      console.log("aqui");
+      await deleteToken();
+      dispatch(log_out());
     } catch (error) {
       console.log(error);
     }

@@ -1,10 +1,17 @@
-import { View, StyleSheet, Image, Text, Pressable } from "react-native";
+import { View, StyleSheet, Image, Text, Pressable, Alert } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../../constants/colors";
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ logoutHandler }) => {
+  const onLogoutPress = () => {
+    Alert.alert("Log Out", "Are you sure you want to Log Out?", [
+      { text: "No", style: "cancel" },
+      { text: "Yes", style: "default", onPress: logoutHandler },
+    ]);
+  };
+
   return (
     <View style={styles.rootContainer}>
       <View style={styles.userDataContainer}>
@@ -17,8 +24,8 @@ const ProfileHeader = () => {
         <Text style={styles.text}>User Name</Text>
       </View>
       <View style={styles.iconsContainer}>
-        <Pressable>
-          <Ionicons name="create-outline" color={"white"} size={35} />
+        <Pressable onPress={onLogoutPress}>
+          <Ionicons name="log-out" color={"white"} size={35} />
         </Pressable>
         <Pressable>
           <Ionicons name="ellipsis-horizontal" color={"white"} size={35} />
