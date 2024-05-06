@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { saveToken, deleteToken, decodeToken } from "../../helpers/jwtHelpers";
 
+import { BACKEND_IP } from "@env";
+
 const initialState = {
   token: null,
   userId: null,
@@ -21,7 +23,7 @@ const authSlice = createSlice({
       state.userId = null;
       state.name = null;
     },
-    set_user: (state, action) => {
+    set_token: (state, action) => {
       state.token = action.payload.token;
       state.userId = action.payload.userId;
       state.name = action.payload.name;
@@ -29,7 +31,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { log_in, log_out, set_user } = authSlice.actions;
+export const { log_in, log_out, set_token } = authSlice.actions;
 
 export default authSlice.reducer;
 
@@ -37,7 +39,7 @@ export const login = (email, password, setLoading) => {
   return async (dispatch) => {
     try {
       setLoading(true);
-      const response = await fetch("http://192.168.1.101:8080/auth/login", {
+      const response = await fetch(`${BACKEND_IP}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,13 +67,12 @@ export const login = (email, password, setLoading) => {
   };
 };
 
-export const setUser = (token) => {
+export const setToken = (token) => {
   return async (dispatch) => {
     try {
       const decodedToken = decodeToken(token);
-      console.log("Decoded Token", decodedToken);
       dispatch(
-        set_user({
+        set_token({
           token,
           userId: decodedToken.userId,
           name: decodedToken.userName,
@@ -86,7 +87,6 @@ export const setUser = (token) => {
 export const logout = () => {
   return async (dispatch) => {
     try {
-      console.log("aqui");
       await deleteToken();
       dispatch(log_out());
     } catch (error) {

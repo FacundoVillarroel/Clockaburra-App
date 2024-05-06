@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { useSelector } from "react-redux";
 
 import Colors from "../constants/colors";
 
 const Header = ({ navigation, route }) => {
+  const name = useSelector((state) => state.user.user.name);
   const handlePress = () => {
     navigation.navigate("profile");
   };
@@ -13,7 +15,7 @@ const Header = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
-        <Text style={styles.title}>Hi UserName!</Text>
+        <Text style={styles.title}>Hi {name}!</Text>
         <Text style={styles.text}>{textContent}</Text>
       </View>
       <Pressable style={styles.subContainer} onPress={handlePress}>

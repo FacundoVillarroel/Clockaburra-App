@@ -1,10 +1,14 @@
 import { View, StyleSheet, Image, Text, Pressable, Alert } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 import Colors from "../../constants/colors";
 
 const ProfileHeader = ({ logoutHandler }) => {
+  const name = useSelector((state) => state.user.user.name);
+  const surname = useSelector((state) => state.user.user.surname);
+
   const onLogoutPress = () => {
     Alert.alert("Log Out", "Are you sure you want to Log Out?", [
       { text: "No", style: "cancel" },
@@ -21,7 +25,9 @@ const ProfileHeader = ({ logoutHandler }) => {
             source={require("../../../assets/logoClockaburra.png")}
           />
         </View>
-        <Text style={styles.text}>User Name</Text>
+        <Text style={styles.text}>
+          {name} {surname}
+        </Text>
       </View>
       <View style={styles.iconsContainer}>
         <Pressable onPress={onLogoutPress}>
