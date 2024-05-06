@@ -1,14 +1,18 @@
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import ProfileHeader from "../components/profile/ProfileHeader";
 import Card from "../components/ui/Card";
+import Loading from "../components/loading/Loading";
 import Colors from "../constants/colors";
 import { logout } from "../store/reducers/auth.slice";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const [loading, setLoading] = useState(false);
+
   const userData = [
     { address: user.address },
     { email: user.email },
@@ -45,18 +49,32 @@ const ProfileScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (!user.id) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [user.id]);
+
   return (
-    <View style={styles.rootContainer}>
-      <ProfileHeader logoutHandler={logoutHandler} />
-      <View style={styles.contentContainer}>
-        <Text style={styles.subTitle}>Pesonal Details</Text>
-        <FlatList
-          data={userData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => Object.keys(item)[0]}
-        />
-      </View>
-    </View>
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <View style={styles.rootContainer}>
+          <ProfileHeader logoutHandler={logoutHandler} />
+          <View style={styles.contentContainer}>
+            <Text style={styles.subTitle}>Pesonal Details</Text>
+            <FlatList
+              data={userData}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => Object.keys(item)[0]}
+            />
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 

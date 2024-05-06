@@ -23,10 +23,13 @@ const userSlice = createSlice({
     set_user: (state, action) => {
       state.user = action.payload;
     },
+    clear_user: (state, action) => {
+      state.user = initialState;
+    },
   },
 });
 
-export const { set_user } = userSlice.actions;
+export const { set_user, clear_user } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -36,6 +39,16 @@ export const setUser = (userId) => {
       const response = await fetch(`${BACKEND_IP}/users/${userId}`);
       const { user } = await response.json();
       dispatch(set_user(user));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const clearUser = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(clear_user());
     } catch (error) {
       console.log(error);
     }

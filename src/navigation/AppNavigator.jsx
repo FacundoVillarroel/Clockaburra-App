@@ -6,7 +6,7 @@ import { loadToken } from "../helpers/jwtHelpers";
 import { setToken } from "../store/reducers/auth.slice";
 import BottomTabs from "./BottomTabs";
 import LoginScreen from "../screens/LoginScreen";
-import { setUser } from "../store/reducers/user.slice";
+import { clearUser, setUser } from "../store/reducers/user.slice";
 
 const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
@@ -28,6 +28,8 @@ const AppNavigator = () => {
     initializeToken();
     if (token) {
       initializeUser();
+    } else {
+      clearUser();
     }
   }, [token]);
 
