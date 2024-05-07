@@ -7,6 +7,7 @@ import { setToken } from "../store/reducers/auth.slice";
 import BottomTabs from "./BottomTabs";
 import LoginScreen from "../screens/LoginScreen";
 import { clearUser, setUser } from "../store/reducers/user.slice";
+import { setClock } from "../store/reducers/clock.slice";
 
 const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
@@ -22,6 +23,7 @@ const AppNavigator = () => {
 
   const initializeUser = () => {
     dispatch(setUser(userId));
+    dispatch(setClock(userId));
   };
 
   useEffect(() => {

@@ -19,7 +19,7 @@ const ProfileScreen = () => {
     { name: user.name },
     { phoneNumber: user.phoneNumber },
     { surname: user.surname },
-    { rol: user.rol },
+    { role: user.role },
   ];
 
   const keyMappings = {
@@ -28,7 +28,7 @@ const ProfileScreen = () => {
     name: "Name",
     phoneNumber: "Phone Number",
     surname: "Surname",
-    rol: "Role",
+    role: "Role",
   };
 
   const renderItem = ({ item }) => (

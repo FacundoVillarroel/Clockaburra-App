@@ -5,12 +5,26 @@ import Colors from "../constants/colors";
 
 const Header = ({ navigation, route }) => {
   const name = useSelector((state) => state.user.user.name);
+  const clockStatus = useSelector((state) => state.clock);
+
   const handlePress = () => {
     navigation.navigate("profile");
   };
   const routeName = route.name[0].toUpperCase() + route.name.slice(1);
 
   const textContent = routeName !== "Dashboard" ? routeName : "Business Name";
+
+  const clockStatusText = () => {
+    if (clockStatus.clockedIn) {
+      if (clockStatus.onBreak) {
+        return "On Break";
+      } else {
+        return "Clocked In";
+      }
+    } else {
+      return "Clocked out";
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -23,7 +37,7 @@ const Header = ({ navigation, route }) => {
           style={styles.image}
           source={require("../../assets/logoClockaburra.png")}
         />
-        <Text style={styles.statusText}>Clocked Out</Text>
+        <Text style={styles.statusText}>{clockStatusText()}</Text>
       </Pressable>
     </View>
   );
