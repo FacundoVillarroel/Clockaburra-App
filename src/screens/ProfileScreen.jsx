@@ -10,7 +10,7 @@ import { logout } from "../store/reducers/auth.slice";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
 
   const userData = [

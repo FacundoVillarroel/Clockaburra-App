@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { DateTime } from "luxon";
 
 import { BACKEND_IP } from "@env";
 
@@ -27,7 +28,7 @@ const clockSlice = createSlice({
       state.clockedIn = action.payload.clockedIn;
       state.onBreak = action.payload.onBreak;
     },
-    clean_clock: (state, action) => {
+    clear_clock: (state, action) => {
       state = initialState;
     },
   },
@@ -39,30 +40,78 @@ export const {
   break_start,
   break_end,
   set_clock,
-  clean_clock,
+  clear_clock,
 } = clockSlice.actions;
 
 export default clockSlice.reducer;
 
 export const clockIn = (userId) => {
   return async (dispatch) => {
-    /* dispatch(clock_in()) */
+    try {
+      const now = DateTime.local();
+      const response = await fetch(`${BACKEND_IP}/clock/in`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          dateTime: now,
+        }),
+      });
+      const clock = await response.json();
+      if (clock.updated) {
+        dispatch(clock_in());
+      } else {
+        return new Error("Error: Could not clock in, try again.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 };
 
 export const clockOut = (userId) => {
   return async (dispatch) => {
-    /* dispatch(clock_out()) */
+    try {
+      const now = DateTime.local();
+      const response = await fetch(`${BACKEND_IP}/clock/out`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          dateTime: now,
+        }),
+      });
+      const clock = await response.json();
+      if (clock.updated) {
+        dispatch(clock_out());
+      } else {
+        return new Error("Error: Could not clock out, try again.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 };
 export const breakStart = (userId) => {
   return async (dispatch) => {
-    /* dispatch(break_start()) */
+    try {
+      /* dispatch(break_start()) */
+    } catch (error) {
+      console.log(error);
+    }
   };
 };
 export const breakEnd = (userId) => {
   return async (dispatch) => {
-    /* dispatch(break_end()) */
+    try {
+      /* dispatch(break_end()) */
+    } catch (error) {
+      console.log(error);
+    }
   };
 };
 export const setClock = (userId) => {
@@ -72,8 +121,12 @@ export const setClock = (userId) => {
     dispatch(set_clock(clockStatus));
   };
 };
-export const cleanClock = (userId) => {
+export const clearClock = (userId) => {
   return async (dispatch) => {
-    /* dispatch(clean_clock()) */
+    try {
+      dispatch(clear_clock());
+    } catch (error) {
+      console.log(error);
+    }
   };
 };

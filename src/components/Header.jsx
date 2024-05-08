@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Colors from "../constants/colors";
 
 const Header = ({ navigation, route }) => {
-  const name = useSelector((state) => state.user.user.name);
+  const name = useSelector((state) => state.user.name);
   const clockStatus = useSelector((state) => state.clock);
 
   const handlePress = () => {

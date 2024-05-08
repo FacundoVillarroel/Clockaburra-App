@@ -7,11 +7,12 @@ import { setToken } from "../store/reducers/auth.slice";
 import BottomTabs from "./BottomTabs";
 import LoginScreen from "../screens/LoginScreen";
 import { clearUser, setUser } from "../store/reducers/user.slice";
-import { setClock } from "../store/reducers/clock.slice";
+import { clearClock, setClock } from "../store/reducers/clock.slice";
 
 const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
   const userId = useSelector((state) => state.auth.userId);
+
   const dispatch = useDispatch();
 
   const initializeToken = async () => {
@@ -32,6 +33,7 @@ const AppNavigator = () => {
       initializeUser();
     } else {
       clearUser();
+      clearClock();
     }
   }, [token]);
 

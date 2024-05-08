@@ -2,18 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import { BACKEND_IP } from "@env";
 
 const initialState = {
-  user: {
-    address: null,
-    email: null,
-    id: null,
-    isRegistered: null,
-    name: null,
-    phoneNumber: null,
-    rol: null,
-    startDate: null,
-    surname: null,
-    username: null,
-  },
+  address: null,
+  email: null,
+  id: null,
+  isRegistered: null,
+  name: null,
+  phoneNumber: null,
+  rol: null,
+  startDate: null,
+  surname: null,
+  username: null,
 };
 
 const userSlice = createSlice({
@@ -21,7 +19,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     set_user: (state, action) => {
-      state.user = action.payload;
+      return action.payload;
     },
     clear_user: (state, action) => {
       state.user = initialState;

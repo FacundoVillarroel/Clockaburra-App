@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 import Colors from "../../constants/colors";
 
 const ProfileHeader = ({ logoutHandler }) => {
-  const name = useSelector((state) => state.user.user.name);
-  const surname = useSelector((state) => state.user.user.surname);
+  const name = useSelector((state) => state.user.name);
+  const surname = useSelector((state) => state.user.surname);
 
   const onLogoutPress = () => {
     Alert.alert("Log Out", "Are you sure you want to Log Out?", [
