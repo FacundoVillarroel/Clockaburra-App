@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { View, StyleSheet, Image, Text, Animated, Easing } from "react-native";
 import Colors from "../../constants/colors";
 
-const Loading = () => {
+const Loading = ({ propStyles = {} }) => {
   const spinValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -22,12 +22,16 @@ const Loading = () => {
   });
 
   return (
-    <View style={styles.rootContainer}>
+    <View style={[styles.rootContainer, propStyles.rootContainer]}>
       <Animated.Image
-        style={[styles.image, { transform: [{ rotate: spin }] }]}
+        style={[
+          styles.image,
+          { transform: [{ rotate: spin }] },
+          propStyles.image,
+        ]}
         source={require("../../../assets/logoClockaburra.png")}
       />
-      <Text style={styles.text}>Loading...</Text>
+      <Text style={[styles.text, propStyles.text]}>Loading...</Text>
     </View>
   );
 };

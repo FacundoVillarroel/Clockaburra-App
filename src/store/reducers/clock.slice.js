@@ -45,9 +45,10 @@ export const {
 
 export default clockSlice.reducer;
 
-export const clockIn = (userId) => {
+export const clockIn = (userId, setLoading) => {
   return async (dispatch) => {
     try {
+      setLoading(true);
       const now = DateTime.local();
       const response = await fetch(`${BACKEND_IP}/clock/in`, {
         method: "POST",
@@ -60,6 +61,7 @@ export const clockIn = (userId) => {
         }),
       });
       const clock = await response.json();
+      setLoading(false);
       if (clock.updated) {
         dispatch(clock_in());
       } else {
@@ -71,9 +73,10 @@ export const clockIn = (userId) => {
   };
 };
 
-export const clockOut = (userId) => {
+export const clockOut = (userId, setLoading) => {
   return async (dispatch) => {
     try {
+      setLoading(true);
       const now = DateTime.local();
       const response = await fetch(`${BACKEND_IP}/clock/out`, {
         method: "POST",
@@ -86,29 +89,66 @@ export const clockOut = (userId) => {
         }),
       });
       const clock = await response.json();
+      setLoading(false);
       if (clock.updated) {
         dispatch(clock_out());
       } else {
-        return new Error("Error: Could not clock out, try again.");
+        return new Error("Error: Could not clock out, please try again.");
       }
     } catch (error) {
       console.log(error);
     }
   };
 };
-export const breakStart = (userId) => {
+export const breakStart = (userId, setLoading) => {
   return async (dispatch) => {
     try {
-      /* dispatch(break_start()) */
+      setLoading(true);
+      const now = DateTime.local();
+      const response = await fetch(`${BACKEND_IP}/clock/breakStart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          dateTime: now,
+        }),
+      });
+      const clock = await response.json();
+      setLoading(false);
+      if (clock.updated) {
+        dispatch(break_start());
+      } else {
+        return new Error("Error: Could not start break, please try again.");
+      }
     } catch (error) {
       console.log(error);
     }
   };
 };
-export const breakEnd = (userId) => {
+export const breakEnd = (userId, setLoading) => {
   return async (dispatch) => {
     try {
-      /* dispatch(break_end()) */
+      setLoading(true);
+      const now = DateTime.local();
+      const response = await fetch(`${BACKEND_IP}/clock/breakEnd`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          dateTime: now,
+        }),
+      });
+      const clock = await response.json();
+      setLoading(false);
+      if (clock.updated) {
+        dispatch(break_end());
+      } else {
+        return new Error("Error: Could not end break, please try again.");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -121,7 +161,7 @@ export const setClock = (userId) => {
     dispatch(set_clock(clockStatus));
   };
 };
-export const clearClock = (userId) => {
+export const clearClock = () => {
   return async (dispatch) => {
     try {
       dispatch(clear_clock());
