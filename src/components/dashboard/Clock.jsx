@@ -1,16 +1,11 @@
-import { StyleSheet, Text, View, Button, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import { DateTime } from "luxon";
 
+import useClockActions from "../../hooks/useClockActions";
+
 import Colors from "../../constants/colors";
-import {
-  breakEnd,
-  breakStart,
-  clockIn,
-  clockOut,
-} from "../../store/reducers/clock.slice";
 
 import CustomPressable from "../ui/CustomPressable";
 import Loading from "../loading/Loading";
@@ -23,7 +18,8 @@ const Clock = () => {
   const isClockedIn = useSelector((state) => state.clock.clockedIn);
   const isOnBreak = useSelector((state) => state.clock.onBreak);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+
+  const { onCheckIn, onCheckOut, onBreakStart, onBreakEnd } = useClockActions();
 
   useEffect(() => {
     const syncClock = () => {
@@ -40,32 +36,19 @@ const Clock = () => {
     syncClock(); // Start the initial synchronization
   }, []);
 
-  const onCheckIn = () => {
-    dispatch(clockIn(userId, setLoading));
-  };
-  const onCheckOut = () => {
-    dispatch(clockOut(userId, setLoading));
-  };
-  const onBreakStart = () => {
-    dispatch(breakStart(userId, setLoading));
-  };
-  const onBreakEnd = () => {
-    dispatch(breakEnd(userId, setLoading));
-  };
-
   const onAction = (action) => {
     switch (action) {
       case "Start Shift":
-        onCheckIn();
+        onCheckIn(userId, setLoading);
         break;
       case "End Shift":
-        onCheckOut();
+        onCheckOut(userId, setLoading);
         break;
       case "Start Break":
-        onBreakStart();
+        onBreakStart(userId, setLoading);
         break;
       case "End Break":
-        onBreakEnd();
+        onBreakEnd(userId, setLoading);
         break;
       default:
         break;
@@ -150,17 +133,26 @@ const styles = StyleSheet.create({
   },
 });
 
-const propStyles = {
+const propStyles = StyleSheet.create({
   rootContainer: {
+    flex: 0,
+    paddingVertical: 3,
+    paddingHorizontal: 12,
     flexDirection: "row",
+    backgroundColor: Colors.primary,
+    borderRadius: 10,
+    elevation: 5,
+    justifyContent: "space-evenly",
   },
   image: {
     height: 50,
     width: 50,
   },
   text: {
-    marginTop: 5,
+    marginTop: 0,
+    marginLeft: 5,
+    color: "white",
   },
-};
+});
 
 export default Clock;

@@ -61,14 +61,18 @@ export const clockIn = (userId, setLoading) => {
         }),
       });
       const clock = await response.json();
-      setLoading(false);
       if (clock.updated) {
+        setLoading(false);
         dispatch(clock_in());
+        return { success: true };
       } else {
-        return new Error("Error: Could not clock in, try again.");
+        return {
+          success: false,
+          message: "Could not clock in, please try again.",
+        };
       }
     } catch (error) {
-      console.log(error);
+      return { success: false, message: error.message };
     }
   };
 };
@@ -89,14 +93,18 @@ export const clockOut = (userId, setLoading) => {
         }),
       });
       const clock = await response.json();
-      setLoading(false);
       if (clock.updated) {
+        setLoading(false);
         dispatch(clock_out());
+        return { success: true };
       } else {
-        return new Error("Error: Could not clock out, please try again.");
+        return {
+          success: false,
+          message: "Could not clock out, please try again.",
+        };
       }
     } catch (error) {
-      console.log(error);
+      return { success: false, message: error.message };
     }
   };
 };
@@ -116,14 +124,18 @@ export const breakStart = (userId, setLoading) => {
         }),
       });
       const clock = await response.json();
-      setLoading(false);
       if (clock.updated) {
+        setLoading(false);
         dispatch(break_start());
+        return { success: true };
       } else {
-        return new Error("Error: Could not start break, please try again.");
+        return {
+          success: false,
+          message: "Could not start break, please try again.",
+        };
       }
     } catch (error) {
-      console.log(error);
+      return { success: false, message: error.message };
     }
   };
 };
@@ -143,14 +155,18 @@ export const breakEnd = (userId, setLoading) => {
         }),
       });
       const clock = await response.json();
-      setLoading(false);
       if (clock.updated) {
+        setLoading(false);
         dispatch(break_end());
+        return { success: true };
       } else {
-        return new Error("Error: Could not end break, please try again.");
+        return {
+          success: false,
+          message: "Could not end break, please try again.",
+        };
       }
     } catch (error) {
-      console.log(error);
+      return { success: false, message: error.message };
     }
   };
 };

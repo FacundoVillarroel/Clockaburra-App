@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
   },
   logoName: {
     fontSize: 48,
-    fontWeight: "bold",
+    fontFamily: "Dosis-Bold",
+    fontWeight: "Bold",
     marginLeft: 8,
     color: Colors.primary,
   },
