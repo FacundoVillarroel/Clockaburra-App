@@ -1,25 +1,48 @@
 import { View, Text, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { DateTime } from "luxon";
+
 import Colors from "../../constants/colors";
 
-const ShiftCard = ({ date, from, to, hours, earnings }) => {
+const ShiftCard = ({ startDate, endDate, workedHours, breaks, hourlyRate }) => {
+  const startDateObj = DateTime.fromISO(startDate);
+  const endDateObj = DateTime.fromISO(endDate);
+  const startDateFormatted = startDateObj.toFormat("ccc, dd LLL");
+  const from = startDateObj.toFormat("HH:mm a'").toLocaleLowerCase();
+  const to = endDateObj.toFormat("HH:mm a'").toLocaleLowerCase();
+  const hours = Math.floor(workedHours);
+  const minutes = Math.round((workedHours - hours) * 60);
+  const formattedWorkedHours = `${hours}:${minutes}`;
+  const earnings = (workedHours * hourlyRate).toFixed(2);
+
+  //calculation of break hours
+  if (breaks.length) {
+    const breakStart = DateTime.fromISO(breaks[0].timeStamp);
+    const breakEnd = DateTime.fromISO(breaks[1].timeStamp);
+    const diffMinutes = breakEnd.diff(breakStart, "minutes").minutes;
+    const diffHours = diffMinutes / 60;
+
+    const diffHoursFormatted = diffHours.toFixed(2);
+    //console.log("Breaks: ", diffHoursFormatted, "hs");
+  }
+
   return (
     <View style={styles.rootContainer}>
       <View style={styles.subContainter}>
         <View style={styles.topContainer}>
           <View style={styles.dateContainer}>
-            <Text style={styles.dayText}> {date} </Text>
+            <Text style={styles.dayText}> {startDateFormatted} </Text>
             <View style={styles.timeContainer}>
               <Ionicons name="time-outline" size={14} color="white" />
               <Text style={styles.timeText}>
                 {" "}
-                {from}- {to}{" "}
+                {from} - {to}{" "}
               </Text>
             </View>
           </View>
           <View style={styles.earningsContainer}>
             <Text style={styles.earningsText}>
-              {hours}hs | ${earnings}
+              {formattedWorkedHours}hs | ${earnings}
             </Text>
           </View>
         </View>
