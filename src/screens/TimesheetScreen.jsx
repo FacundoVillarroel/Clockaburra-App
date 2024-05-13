@@ -7,29 +7,18 @@ import ShiftCard from "../components/shifts/ShiftCard";
 import WeekIndicator from "../components/shifts/WeekIndicator";
 import WeekSelector from "../components/shifts/WeekSelector";
 import Loading from "../components/loading/Loading";
+import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
 
 import { BACKEND_IP } from "@env";
 import Colors from "../constants/colors";
-
-const getMondayOfCurrentWeek = () => {
-  return DateTime.local().startOf("week").toFormat("ccc, dd LLL");
-};
-
-const getSundayOfCurrentWeek = () => {
-  return DateTime.local().endOf("week").toFormat("ccc, dd LLL");
-};
 
 const TimesheetScreen = () => {
   const [loading, setLoading] = useState(false);
   const [timesheets, setTimesheets] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(getMondayOfCurrentWeek());
+  const [selectedWeek, setSelectedWeek] = useState(getStartOfWeek());
   const userId = useSelector((state) => state.user.id);
   const hourlyRate = useSelector((state) => state.user.hourlyRate);
-
-  const mondayOfCurrentWeek = getMondayOfCurrentWeek();
-
-  const sundayOfCurrentWeek = getSundayOfCurrentWeek();
 
   const calcTotalHours = (shiftArray) => {
     let counter = shiftArray.reduce(
@@ -82,8 +71,8 @@ const TimesheetScreen = () => {
       ) : (
         <>
           <WeekIndicator
-            from={mondayOfCurrentWeek}
-            to={sundayOfCurrentWeek}
+            from={getStartOfWeek(selectedWeek)}
+            to={getEndOfWeek(selectedWeek)}
             totalHours={totalHours}
             totalEarnings={totalHours * hourlyRate}
           />

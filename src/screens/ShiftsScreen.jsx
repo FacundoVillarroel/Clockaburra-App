@@ -8,17 +8,14 @@ import { useState, useEffect } from "react";
 import Loading from "../components/loading/Loading";
 import { BACKEND_IP } from "@env";
 import { useSelector } from "react-redux";
-import {
-  getMondayOfCurrentWeek,
-  getSundayOfWeekSelected,
-} from "../helpers/dateHelpers";
+import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
 import { DateTime } from "luxon";
 
 const ShiftsScreen = () => {
   const userId = useSelector((state) => state.user.id);
   const hourlyRate = useSelector((state) => state.user.hourlyRate);
   const [loading, setLoading] = useState(true);
-  const [selectedWeek, setSelectedWeek] = useState(getMondayOfCurrentWeek());
+  const [selectedWeek, setSelectedWeek] = useState(getStartOfWeek());
   const [shifts, setShifts] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
 
@@ -70,9 +67,7 @@ const ShiftsScreen = () => {
         <>
           <WeekIndicator
             from={selectedWeek}
-            to={getSundayOfWeekSelected(
-              DateTime.fromFormat(selectedWeek, "ccc, dd LLL")
-            )}
+            to={getEndOfWeek(DateTime.fromFormat(selectedWeek, "ccc, dd LLL"))}
             totalHours={totalHours}
             totalEarnings={totalHours * hourlyRate}
           />

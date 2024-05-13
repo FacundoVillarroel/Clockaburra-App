@@ -26,23 +26,22 @@ const formatMont = (date) => {
   const month = allMonts[monthNumber];
   return month;
 };
+const dateFormat = "ccc, dd LLL";
 
-const getMondayOfCurrentWeek = () => {
-  return DateTime.local().startOf("week").toFormat("ccc, dd LLL");
+const getEndOfWeek = (date = DateTime.local()) => {
+  let dateObj = date;
+  if (typeof dateObj === "string") {
+    dateObj = DateTime.fromFormat(date, dateFormat);
+  }
+  return dateObj.endOf("week").toFormat(dateFormat);
 };
 
-const getSundayOfCurrentWeek = () => {
-  return DateTime.local().endOf("week").toFormat("ccc, dd LLL");
+const getStartOfWeek = (date = DateTime.local()) => {
+  let dateObj = date;
+  if (typeof dateObj === "string") {
+    dateObj = DateTime.fromFormat(date, dateFormat);
+  }
+  return dateObj.startOf("week").toFormat(dateFormat);
 };
 
-const getSundayOfWeekSelected = (weekSelected) => {
-  return weekSelected.endOf("week").toFormat("ccc, dd LLL");
-};
-
-export {
-  formatDay,
-  formatMont,
-  getMondayOfCurrentWeek,
-  getSundayOfCurrentWeek,
-  getSundayOfWeekSelected,
-};
+export { formatDay, formatMont, getStartOfWeek, getEndOfWeek };
