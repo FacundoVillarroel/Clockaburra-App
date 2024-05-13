@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import Colors from "../../constants/colors";
 
-const WeekSelector = () => {
+const WeekSelector = ({ selectedWeek, setSelectedWeek }) => {
   return (
     <View style={styles.weekSelectorContainer}>
       <Pressable style={styles.pressable}>
@@ -12,7 +12,7 @@ const WeekSelector = () => {
         <Text style={styles.pressableText}>Prev Week</Text>
       </Pressable>
       <Pressable style={styles.dateContainer}>
-        <Text style={styles.dateText}>18/03/2024</Text>
+        <Text style={styles.dateText}>{selectedWeek}</Text>
       </Pressable>
       <Pressable style={styles.pressable}>
         <Text style={styles.pressableText}>Next Week </Text>

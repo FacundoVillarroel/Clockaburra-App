@@ -12,11 +12,11 @@ import { BACKEND_IP } from "@env";
 import Colors from "../constants/colors";
 
 const getMondayOfCurrentWeek = () => {
-  return DateTime.local().startOf("week");
+  return DateTime.local().startOf("week").toFormat("ccc, dd LLL");
 };
 
 const getSundayOfCurrentWeek = () => {
-  return DateTime.local().endOf("week");
+  return DateTime.local().endOf("week").toFormat("ccc, dd LLL");
 };
 
 const TimesheetScreen = () => {
@@ -31,24 +31,21 @@ const TimesheetScreen = () => {
 
   const sundayOfCurrentWeek = getSundayOfCurrentWeek();
 
-  const calcTotalHours = (timesheetArray) => {
-    let counter = timesheetArray.reduce(
+  const calcTotalHours = (shiftArray) => {
+    let counter = shiftArray.reduce(
       (acc, current) => acc + current.workedHours,
       0
     );
     return counter.toFixed(2);
   };
-
   // add filter by week
   const getTimesheetFromDb = async (selectedWeek) => {
     try {
       setLoading(true);
       const response = await fetch(`${BACKEND_IP}/timesheet/user/${userId}`);
       const data = await response.json();
-      if (data.data) {
-        const timesheetArray = data.data.filter(
-          (item) => item.endDate !== null
-        );
+      if (data) {
+        const timesheetArray = data.filter((item) => item.endDate !== null);
         timesheetArray.sort((a, b) => {
           const dateA = DateTime.fromISO(a.startDate);
           const dateB = DateTime.fromISO(b.startDate);
@@ -58,7 +55,7 @@ const TimesheetScreen = () => {
         setTimesheets(timesheetArray);
         setLoading(false);
       } else {
-        throw new Error({ message: "Error getting data from db", data });
+        throw new Error("Error getting data from db");
       }
     } catch (error) {
       setLoading(false);
@@ -76,14 +73,17 @@ const TimesheetScreen = () => {
 
   return (
     <View style={styles.rootContainer}>
-      <WeekSelector />
+      <WeekSelector
+        selectedWeek={selectedWeek}
+        setSelectedWeek={setSelectedWeek}
+      />
       {loading ? (
         <Loading />
       ) : (
         <>
           <WeekIndicator
-            from={mondayOfCurrentWeek.toFormat("ccc, dd LLL")}
-            to={sundayOfCurrentWeek.toFormat("ccc,dd LLL")}
+            from={mondayOfCurrentWeek}
+            to={sundayOfCurrentWeek}
             totalHours={totalHours}
             totalEarnings={totalHours * hourlyRate}
           />
@@ -94,7 +94,7 @@ const TimesheetScreen = () => {
               <ShiftCard
                 startDate={item.startDate}
                 endDate={item.endDate}
-                workedHours={item.workedHours}
+                hours={item.workedHours}
                 breaks={item.breaks}
                 hourlyRate={hourlyRate}
               />

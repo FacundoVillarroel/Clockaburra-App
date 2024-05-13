@@ -4,37 +4,93 @@ import WeekSelector from "../components/shifts/WeekSelector";
 import WeekIndicator from "../components/shifts/WeekIndicator";
 import ShiftCard from "../components/shifts/ShiftCard";
 
-import shifts from "../data/shifts";
-
-const totalHours = shifts.reduce((total, shift) => total + shift.hours, 0);
-const totalEarnings = shifts.reduce(
-  (total, shift) => total + shift.earnings,
-  0
-);
+import { useState, useEffect } from "react";
+import Loading from "../components/loading/Loading";
+import { BACKEND_IP } from "@env";
+import { useSelector } from "react-redux";
+import {
+  getMondayOfCurrentWeek,
+  getSundayOfWeekSelected,
+} from "../helpers/dateHelpers";
+import { DateTime } from "luxon";
 
 const ShiftsScreen = () => {
+  const userId = useSelector((state) => state.user.id);
+  const hourlyRate = useSelector((state) => state.user.hourlyRate);
+  const [loading, setLoading] = useState(true);
+  const [selectedWeek, setSelectedWeek] = useState(getMondayOfCurrentWeek());
+  const [shifts, setShifts] = useState([]);
+  const [totalHours, setTotalHours] = useState(0);
+
+  const calcTotalHours = (shiftArray) => {
+    let counter = shiftArray.reduce(
+      (acc, current) => acc + current.totalHours,
+      0
+    );
+    return counter.toFixed(2);
+  };
+
+  const getShiftsFromDb = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${BACKEND_IP}/shift/user/${userId}`);
+      const data = await response.json();
+      if (data) {
+        const shiftArray = data.filter((item) => item.endDate !== null);
+        shiftArray.sort((a, b) => {
+          const dateA = DateTime.fromISO(a.startDate);
+          const dateB = DateTime.fromISO(b.startDate);
+          return dateA - dateB;
+        });
+        setTotalHours(calcTotalHours(shiftArray));
+        setShifts(shiftArray);
+        setLoading(false);
+      } else {
+        throw new Error("Error getting data from db");
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log("GetShiftFromDb", error.message);
+    }
+  };
+
+  useEffect(() => {
+    getShiftsFromDb(selectedWeek);
+  }, [selectedWeek]);
+
   return (
     <View style={styles.rootContainer}>
-      <WeekSelector />
-      <WeekIndicator
-        from={"Mon, 18 Mar"}
-        to={"Sun, 24 Mar"}
-        totalHours={totalHours}
-        totalEarnings={totalEarnings}
+      <WeekSelector
+        selectedWeek={selectedWeek}
+        setSelectedWeek={setSelectedWeek}
       />
-      <FlatList
-        data={shifts}
-        keyExtractor={(item) => item.date}
-        renderItem={({ item }) => (
-          <ShiftCard
-            date={item.date}
-            hours={item.hours}
-            earnings={item.earnings}
-            from={item.from}
-            to={item.to}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <WeekIndicator
+            from={selectedWeek}
+            to={getSundayOfWeekSelected(
+              DateTime.fromFormat(selectedWeek, "ccc, dd LLL")
+            )}
+            totalHours={totalHours}
+            totalEarnings={totalHours * hourlyRate}
           />
-        )}
-      />
+          <FlatList
+            data={shifts}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <ShiftCard
+                startDate={item.startDate}
+                endDate={item.endDate}
+                hours={item.totalHours}
+                breaks={item.breaks}
+                hourlyRate={hourlyRate}
+              />
+            )}
+          />
+        </>
+      )}
     </View>
   );
 };

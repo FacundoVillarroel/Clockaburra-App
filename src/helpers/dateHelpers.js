@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 const formatDay = (date) => {
   const weekDays = ["mon", "tue", "wed", "thu", "fry", "sat", "sun"];
   const dayNumber = date.getDay();
@@ -25,4 +27,22 @@ const formatMont = (date) => {
   return month;
 };
 
-export { formatDay, formatMont };
+const getMondayOfCurrentWeek = () => {
+  return DateTime.local().startOf("week").toFormat("ccc, dd LLL");
+};
+
+const getSundayOfCurrentWeek = () => {
+  return DateTime.local().endOf("week").toFormat("ccc, dd LLL");
+};
+
+const getSundayOfWeekSelected = (weekSelected) => {
+  return weekSelected.endOf("week").toFormat("ccc, dd LLL");
+};
+
+export {
+  formatDay,
+  formatMont,
+  getMondayOfCurrentWeek,
+  getSundayOfCurrentWeek,
+  getSundayOfWeekSelected,
+};

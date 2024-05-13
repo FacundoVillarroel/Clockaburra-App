@@ -4,16 +4,16 @@ import { DateTime } from "luxon";
 
 import Colors from "../../constants/colors";
 
-const ShiftCard = ({ startDate, endDate, workedHours, breaks, hourlyRate }) => {
+const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
   const startDateObj = DateTime.fromISO(startDate);
   const endDateObj = DateTime.fromISO(endDate);
   const startDateFormatted = startDateObj.toFormat("ccc, dd LLL");
   const from = startDateObj.toFormat("HH:mm a'").toLocaleLowerCase();
   const to = endDateObj.toFormat("HH:mm a'").toLocaleLowerCase();
-  const hours = Math.floor(workedHours);
-  const minutes = Math.round((workedHours - hours) * 60);
-  const formattedWorkedHours = `${hours}:${minutes}`;
-  const earnings = (workedHours * hourlyRate).toFixed(2);
+  const totalHours = Math.floor(hours);
+  const minutes = Math.round((hours - totalHours) * 60);
+  const formattedWorkedHours = `${totalHours}:${minutes}`;
+  const earnings = (hours * hourlyRate).toFixed(2);
 
   //calculation of break hours
   if (breaks.length) {
