@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 8,
+    paddingVertical: 12,
   },
   pressableText: {
     color: Colors.primary,

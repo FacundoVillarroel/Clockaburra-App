@@ -7,7 +7,11 @@ import ShiftCard from "../components/shifts/ShiftCard";
 import WeekIndicator from "../components/shifts/WeekIndicator";
 import WeekSelector from "../components/shifts/WeekSelector";
 import Loading from "../components/loading/Loading";
-import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
+import {
+  getStartOfWeek,
+  getEndOfWeek,
+  dateFormat,
+} from "../helpers/dateHelpers";
 
 import { BACKEND_IP } from "@env";
 import Colors from "../constants/colors";
@@ -27,11 +31,17 @@ const TimesheetScreen = () => {
     );
     return counter.toFixed(2);
   };
-  // add filter by week
+
   const getTimesheetFromDb = async (selectedWeek) => {
     try {
       setLoading(true);
-      const response = await fetch(`${BACKEND_IP}/timesheet/user/${userId}`);
+      const selectedWeekTime = DateTime.fromFormat(
+        selectedWeek,
+        dateFormat
+      ).toISO();
+      const response = await fetch(
+        `${BACKEND_IP}/timesheet/user/${userId}/week/${selectedWeekTime}`
+      );
       const data = await response.json();
       if (data) {
         const timesheetArray = data.filter((item) => item.endDate !== null);

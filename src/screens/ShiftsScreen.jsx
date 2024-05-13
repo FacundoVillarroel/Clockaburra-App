@@ -8,7 +8,11 @@ import { useState, useEffect } from "react";
 import Loading from "../components/loading/Loading";
 import { BACKEND_IP } from "@env";
 import { useSelector } from "react-redux";
-import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
+import {
+  getStartOfWeek,
+  getEndOfWeek,
+  dateFormat,
+} from "../helpers/dateHelpers";
 import { DateTime } from "luxon";
 
 const ShiftsScreen = () => {
@@ -30,7 +34,13 @@ const ShiftsScreen = () => {
   const getShiftsFromDb = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${BACKEND_IP}/shift/user/${userId}`);
+      const selectedWeekTime = DateTime.fromFormat(
+        selectedWeek,
+        dateFormat
+      ).toISO();
+      const response = await fetch(
+        `${BACKEND_IP}/shift/user/${userId}/week/${selectedWeekTime}`
+      );
       const data = await response.json();
       if (data) {
         const shiftArray = data.filter((item) => item.endDate !== null);
