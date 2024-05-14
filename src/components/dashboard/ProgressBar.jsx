@@ -3,10 +3,11 @@ import { View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../../constants/colors";
 
-const ProgressBar = ({ data }) => {
-  const { workingDays, daysWorked } = data;
-  const percentage = (daysWorked / workingDays) * 100;
-
+const ProgressBar = ({ workingDays, daysWorked }) => {
+  let percentage = (daysWorked / workingDays) * 100;
+  if (isNaN(percentage)) {
+    percentage = 0;
+  }
   return (
     <View style={styles.progressBarContainer}>
       <View style={styles.progressBar}>

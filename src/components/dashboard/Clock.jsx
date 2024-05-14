@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "80%",
+    paddingTop: 8,
   },
   text: {
     color: Colors.primary,

@@ -62,13 +62,17 @@ const DashboardScreen = () => {
     );
   };
 
-  const getNextShiftInfo = (data) => {
-    if (!data) {
+  const getNextShiftInfo = () => {
+    const todayISO = DateTime.local().toISODate();
+    const todayShift = shifts.find(
+      (shift) => DateTime.fromISO(shift.startDate).toISODate() === todayISO
+    );
+    if (!todayShift) {
       return { today: false };
     }
     const now = DateTime.local();
-    const startDateTime = DateTime.fromISO(data.startDate);
-    const endDateTime = DateTime.fromISO(data.endDate);
+    const startDateTime = DateTime.fromISO(todayShift.startDate);
+    const endDateTime = DateTime.fromISO(todayShift.endDate);
 
     const today = now.hasSame(startDateTime, "day");
 
@@ -102,12 +106,12 @@ const DashboardScreen = () => {
         <Loading />
       ) : (
         <View>
-          <Clock shift={getNextShiftInfo(shifts[0])} />
+          <Clock shift={getNextShiftInfo()} />
           <ScheduleCard
             workingDays={getWorkingDays()}
             totalPayment={totalHours * hourlyRate}
           />
-          <ThisPeriodCard />
+          <ThisPeriodCard shifts={shifts} />
         </View>
       )}
     </>
