@@ -34,15 +34,12 @@ const ShiftsScreen = () => {
   const getShiftsFromDb = async () => {
     try {
       setLoading(true);
-      const selectedWeekTime = DateTime.fromFormat(
-        selectedWeek,
-        dateFormat
-      ).toISO();
+      const startDate = DateTime.fromFormat(selectedWeek, dateFormat).toISO();
       const response = await fetch(
-        `${BACKEND_IP}/shift/user/${userId}/week/${selectedWeekTime}`
+        `${BACKEND_IP}/shift/user/${userId}/week/${startDate}`
       );
       const data = await response.json();
-      if (data) {
+      if (Array.isArray(data)) {
         const shiftArray = data.filter((item) => item.endDate !== null);
         shiftArray.sort((a, b) => {
           const dateA = DateTime.fromISO(a.startDate);
@@ -53,11 +50,11 @@ const ShiftsScreen = () => {
         setShifts(shiftArray);
         setLoading(false);
       } else {
-        throw new Error("Error getting data from db");
+        throw new Error("Error getting data from db: ", data);
       }
     } catch (error) {
       setLoading(false);
-      console.log("GetShiftFromDb", error.message);
+      console.log(error.message);
     }
   };
 

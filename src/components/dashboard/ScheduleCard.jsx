@@ -1,27 +1,22 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import Colors from "../../constants/colors";
 import SingleDayContainer from "./SingleDayContainer";
+import { DateTime } from "luxon";
 
-// Replace with data from Database
-let UserRate = 30.4;
+const ScheduleCard = ({ workingDays, totalPayment }) => {
+  const getDayInformation = (i) => {
+    const dayName = DateTime.local()
+      .set({ weekday: i })
+      .setLocale("en")
+      .toFormat("ccc");
 
-const workingDays = [
-  { day: "monday", isWorkingDay: true, hours: 6 },
-  { day: "tuesday", isWorkingDay: false },
-  { day: "wednesday", isWorkingDay: false },
-  { day: "thursday", isWorkingDay: true, hours: 6.5 },
-  { day: "friday", isWorkingDay: true, hours: 7 },
-  { day: "saturday", isWorkingDay: true, hours: 6 },
-  { day: "sunday", isWorkingDay: true, hours: 8 },
-];
+    return { dayName: dayName, isWorkingDay: workingDays.includes(dayName) };
+  };
 
-const totalHours = workingDays
-  .filter((day) => day.isWorkingDay)
-  .reduce((acc, day) => acc + day.hours, 0);
+  const daysOfWeekInformation = Array.from({ length: 7 }, (_, i) =>
+    getDayInformation(i + 1)
+  );
 
-const totalPayment = totalHours * UserRate;
-
-const ScheduleCard = () => {
   return (
     <View style={styles.rootContainer}>
       <View style={styles.textsContainer}>
@@ -34,14 +29,14 @@ const ScheduleCard = () => {
       </View>
       <View style={styles.flatListContainer}>
         <FlatList
-          data={workingDays}
+          data={daysOfWeekInformation}
           scrollEnabled={false}
           horizontal
-          keyExtractor={(item) => item.day}
-          renderItem={(item) => (
+          keyExtractor={(item) => item.dayName}
+          renderItem={({ item }) => (
             <SingleDayContainer
-              day={item.item.day[0].toUpperCase()}
-              isWorkingDay={item.item.isWorkingDay}
+              day={item.dayName[0].toUpperCase()}
+              isWorkingDay={item.isWorkingDay}
             ></SingleDayContainer>
           )}
         ></FlatList>
