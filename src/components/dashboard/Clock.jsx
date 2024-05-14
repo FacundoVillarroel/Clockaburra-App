@@ -10,7 +10,7 @@ import Colors from "../../constants/colors";
 import CustomPressable from "../ui/CustomPressable";
 import Loading from "../loading/Loading";
 
-const Clock = () => {
+const Clock = ({ shift }) => {
   const [currentTime, setCurrentTime] = useState(
     DateTime.local().toFormat("hh:mm a'").toLocaleLowerCase()
   );
@@ -77,12 +77,33 @@ const Clock = () => {
     return isOnBreak ? "End Break" : "Start Break";
   };
 
+  const renderNextShiftInfo = () => {
+    if (!isClockedIn) {
+      if (shift.today) {
+        return (
+          <View style={styles.nextShiftContainer}>
+            <Text style={styles.nextShiftText}>
+              {shift.timeToStart
+                ? `Your next shift starts in: ${shift.timeToStart}`
+                : `Your shift should have started at ${shift.startTime}`}
+            </Text>
+            <Text style={styles.text}>
+              {shift.startTime} - {shift.endTime}
+            </Text>
+          </View>
+        );
+      } else {
+        return <Text style={styles.text}>There isn't scheduled shift</Text>;
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.dateText}>{currentTime}</Text>
       </View>
-      <Text style={styles.text}>There isn't scheduled shift</Text>
+      {renderNextShiftInfo()}
       <View style={styles.buttonsContainer}>
         {loading ? (
           <Loading propStyles={propStyles} />
@@ -112,6 +133,15 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
   },
+  nextShiftContainer: {
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  nextShiftText: {
+    color: Colors.primary,
+    fontWeight: "500",
+    fontSize: 16,
+  },
   dateText: {
     color: Colors.primary,
     fontSize: 50,
@@ -125,6 +155,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: 16,
     marginVertical: 5,
+    paddingVertical: 4,
   },
   buttonText: {
     color: "white",
