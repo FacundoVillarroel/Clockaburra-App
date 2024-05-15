@@ -9,14 +9,8 @@ import { DateTime } from "luxon";
 import { dateFormat, getStartOfWeek } from "../helpers/dateHelpers";
 import { BACKEND_IP } from "@env";
 import Loading from "../components/loading/Loading";
-
-const calcTotalHours = (shiftArray) => {
-  let counter = shiftArray.reduce(
-    (acc, current) => acc + current.totalHours,
-    0
-  );
-  return counter.toFixed(2);
-};
+import fetchDataFromDb from "../helpers/fetch";
+import { calcTotalHours } from "../helpers/calculationFunctions";
 
 const DashboardScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -25,27 +19,17 @@ const DashboardScreen = () => {
   const userId = useSelector((state) => state.user.id);
   const hourlyRate = useSelector((state) => state.user.hourlyRate);
 
+  const endpoint = `${BACKEND_IP}/shift`;
+
   const getShiftsFromDb = async (selectedWeek) => {
     try {
       setLoading(true);
-      const startDate = DateTime.fromFormat(selectedWeek, dateFormat).toISO();
-      const response = await fetch(
-        `${BACKEND_IP}/shift/user/${userId}/week/${startDate}`
-      );
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        const shiftArray = data.filter((item) => item.endDate !== null);
-        shiftArray.sort((a, b) => {
-          const dateA = DateTime.fromISO(a.startDate);
-          const dateB = DateTime.fromISO(b.startDate);
-          return dateA - dateB;
-        });
-        setTotalHours(calcTotalHours(shiftArray));
-        setShifts(shiftArray);
-        setLoading(false);
-      } else {
-        throw new Error("Error getting data from db: ", data);
-      }
+      const shiftArray = await fetchDataFromDb(endpoint, userId, selectedWeek);
+      const hoursArray = shiftArray.map((shift) => shift.totalHours);
+
+      setTotalHours(calcTotalHours(hoursArray));
+      setShifts(shiftArray);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error.message);

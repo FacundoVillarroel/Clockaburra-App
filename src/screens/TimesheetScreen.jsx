@@ -7,11 +7,10 @@ import ShiftCard from "../components/shifts/ShiftCard";
 import WeekIndicator from "../components/shifts/WeekIndicator";
 import WeekSelector from "../components/shifts/WeekSelector";
 import Loading from "../components/loading/Loading";
-import {
-  getStartOfWeek,
-  getEndOfWeek,
-  dateFormat,
-} from "../helpers/dateHelpers";
+import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
+
+import fetchDataFromDb from "../helpers/fetch";
+import { calcTotalHours } from "../helpers/calculationFunctions";
 
 import { BACKEND_IP } from "@env";
 import Colors from "../constants/colors";
@@ -24,38 +23,23 @@ const TimesheetScreen = () => {
   const userId = useSelector((state) => state.user.id);
   const hourlyRate = useSelector((state) => state.user.hourlyRate);
 
-  const calcTotalHours = (shiftArray) => {
-    let counter = shiftArray.reduce(
-      (acc, current) => acc + current.workedHours,
-      0
-    );
-    return counter.toFixed(2);
-  };
+  const endPoint = `${BACKEND_IP}/timesheet`;
 
-  const getTimesheetFromDb = async (selectedWeek) => {
+  const getTimesheetFromDb = async () => {
     try {
       setLoading(true);
-      const selectedWeekTime = DateTime.fromFormat(
-        selectedWeek,
-        dateFormat
-      ).toISO();
-      const response = await fetch(
-        `${BACKEND_IP}/timesheet/user/${userId}/week/${selectedWeekTime}`
+      const timesheetArray = await fetchDataFromDb(
+        endPoint,
+        userId,
+        selectedWeek
       );
-      const data = await response.json();
-      if (data) {
-        const timesheetArray = data.filter((item) => item.endDate !== null);
-        timesheetArray.sort((a, b) => {
-          const dateA = DateTime.fromISO(a.startDate);
-          const dateB = DateTime.fromISO(b.startDate);
-          return dateA - dateB;
-        });
-        setTotalHours(calcTotalHours(timesheetArray));
-        setTimesheets(timesheetArray);
-        setLoading(false);
-      } else {
-        throw new Error("Error getting data from db");
-      }
+      const hoursArray = timesheetArray.map(
+        (timesheet) => timesheet.workedHours
+      );
+
+      setTotalHours(calcTotalHours(hoursArray));
+      setTimesheets(timesheetArray);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -63,11 +47,11 @@ const TimesheetScreen = () => {
   };
 
   useEffect(() => {
-    getTimesheetFromDb(selectedWeek);
+    getTimesheetFromDb();
   }, [selectedWeek]);
 
   const onRefresh = () => {
-    getTimesheetFromDb(selectedWeek);
+    getTimesheetFromDb();
   };
 
   return (

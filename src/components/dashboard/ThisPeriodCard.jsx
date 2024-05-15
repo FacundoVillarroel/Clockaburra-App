@@ -7,17 +7,14 @@ import Loading from "../loading/Loading";
 import { DateTime } from "luxon";
 import Colors from "../../constants/colors";
 
-import {
-  getStartOfWeek,
-  getEndOfWeek,
-  dateFormat,
-} from "../../helpers/dateHelpers";
+import { getStartOfWeek, getEndOfWeek } from "../../helpers/dateHelpers";
 import { BACKEND_IP } from "@env";
 import { useSelector } from "react-redux";
+import fetchDataFromDb from "../../helpers/fetch";
+import { calcTotalHours } from "../../helpers/calculationFunctions";
 
 const ThisPeriodCard = ({ shifts }) => {
   const [loading, setLoading] = useState(false);
-  const [timesheet, setTimesheets] = useState([]);
   const [workingDays, setWorkingDays] = useState(0);
   const [daysWorked, setDaysWorked] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
@@ -27,46 +24,33 @@ const ThisPeriodCard = ({ shifts }) => {
   const monday = getStartOfWeek();
   const sunday = getEndOfWeek();
 
-  const calcTotalHours = (hoursArray) => {
-    return hoursArray.reduce((acc, hours) => acc + hours, 0).toFixed(1);
-  };
+  const endpoint = `${BACKEND_IP}/timesheet`;
 
-  const getTimesheetFromDb = async (selectedWeek) => {
+  const getTimesheetFromDb = async () => {
     try {
       setLoading(true);
-      const selectedWeekTime = DateTime.fromFormat(
-        selectedWeek,
-        dateFormat
-      ).toISO();
-      const response = await fetch(
-        `${BACKEND_IP}/timesheet/user/${userId}/week/${selectedWeekTime}`
+      const selectedWeek = getStartOfWeek();
+
+      const timesheetArray = await fetchDataFromDb(
+        endpoint,
+        userId,
+        selectedWeek
       );
-      const data = await response.json();
-      if (data) {
-        const timesheetArray = data.filter((item) => item.endDate !== null);
-        timesheetArray.sort((a, b) => {
-          const dateA = DateTime.fromISO(a.startDate);
-          const dateB = DateTime.fromISO(b.startDate);
-          return dateA - dateB;
-        });
-        setTimesheets(timesheetArray);
-        const uniqueDaysShift = new Set(
-          shifts.map((shift) => DateTime.fromISO(shift.startDate).toISODate())
-        );
-        const uniqueDaysTimesheet = new Set(
-          timesheetArray.map((shift) =>
-            DateTime.fromISO(shift.startDate).toISODate()
-          )
-        );
-        setTotalHours(
-          calcTotalHours(timesheetArray.map((item) => item.workedHours))
-        );
-        setWorkingDays(uniqueDaysShift.size);
-        setDaysWorked(uniqueDaysTimesheet.size);
-        setLoading(false);
-      } else {
-        throw new Error("Error getting data from db");
-      }
+
+      const uniqueDaysShift = new Set(
+        shifts.map((shift) => DateTime.fromISO(shift.startDate).toISODate())
+      );
+      const uniqueDaysTimesheet = new Set(
+        timesheetArray.map((shift) =>
+          DateTime.fromISO(shift.startDate).toISODate()
+        )
+      );
+      setTotalHours(
+        calcTotalHours(timesheetArray.map((item) => item.workedHours))
+      );
+      setWorkingDays(uniqueDaysShift.size);
+      setDaysWorked(uniqueDaysTimesheet.size);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -74,7 +58,7 @@ const ThisPeriodCard = ({ shifts }) => {
   };
 
   useEffect(() => {
-    getTimesheetFromDb(getStartOfWeek());
+    getTimesheetFromDb();
   }, []);
 
   return (

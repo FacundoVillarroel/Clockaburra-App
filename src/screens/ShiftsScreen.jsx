@@ -8,12 +8,10 @@ import { useState, useEffect } from "react";
 import Loading from "../components/loading/Loading";
 import { BACKEND_IP } from "@env";
 import { useSelector } from "react-redux";
-import {
-  getStartOfWeek,
-  getEndOfWeek,
-  dateFormat,
-} from "../helpers/dateHelpers";
+import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
 import { DateTime } from "luxon";
+import fetchDataFromDb from "../helpers/fetch";
+import { calcTotalHours } from "../helpers/calculationFunctions";
 
 const ShiftsScreen = () => {
   const userId = useSelector((state) => state.user.id);
@@ -23,35 +21,17 @@ const ShiftsScreen = () => {
   const [shifts, setShifts] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
 
-  const calcTotalHours = (shiftArray) => {
-    let counter = shiftArray.reduce(
-      (acc, current) => acc + current.totalHours,
-      0
-    );
-    return counter.toFixed(2);
-  };
+  const endPoint = `${BACKEND_IP}/shift`;
 
   const getShiftsFromDb = async () => {
     try {
       setLoading(true);
-      const startDate = DateTime.fromFormat(selectedWeek, dateFormat).toISO();
-      const response = await fetch(
-        `${BACKEND_IP}/shift/user/${userId}/week/${startDate}`
-      );
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        const shiftArray = data.filter((item) => item.endDate !== null);
-        shiftArray.sort((a, b) => {
-          const dateA = DateTime.fromISO(a.startDate);
-          const dateB = DateTime.fromISO(b.startDate);
-          return dateA - dateB;
-        });
-        setTotalHours(calcTotalHours(shiftArray));
-        setShifts(shiftArray);
-        setLoading(false);
-      } else {
-        throw new Error("Error getting data from db: ", data);
-      }
+      const shiftArray = await fetchDataFromDb(endPoint, userId, selectedWeek);
+      const hoursArray = shiftArray.map((shift) => shift.totalHours);
+
+      setTotalHours(calcTotalHours(hoursArray));
+      setShifts(shiftArray);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error.message);
