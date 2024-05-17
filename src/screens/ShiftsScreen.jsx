@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl } from "react-native";
 
 import WeekSelector from "../components/shifts/WeekSelector";
 import WeekIndicator from "../components/shifts/WeekIndicator";
@@ -12,6 +12,8 @@ import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
 import { DateTime } from "luxon";
 import fetchDataFromDb from "../helpers/fetch";
 import { calcTotalHours } from "../helpers/calculationFunctions";
+
+import Colors from "../constants/colors";
 
 const ShiftsScreen = () => {
   const userId = useSelector((state) => state.user.id);
@@ -70,6 +72,15 @@ const ShiftsScreen = () => {
                 hourlyRate={hourlyRate}
               />
             )}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={getShiftsFromDb}
+                colors={[Colors.secondary, Colors.primary]}
+                tintColor={Colors.primary}
+                progressBackgroundColor="#ffffff"
+              />
+            }
           />
         </>
       )}

@@ -68,7 +68,6 @@ const Clock = ({ shift }) => {
     ]);
   };
 
-  //add logic with shifts
   const manageWorkAction = () => {
     return isClockedIn ? "End Shift" : "Start Shift";
   };
@@ -76,17 +75,27 @@ const Clock = ({ shift }) => {
   const manageBreakAction = () => {
     return isOnBreak ? "End Break" : "Start Break";
   };
+  const getNextShiftText = () => {
+    const endTime = DateTime.fromFormat(shift.endTime, "HH:mm");
+    const now = DateTime.local();
+    const endTimeIsBeforeNow = endTime < now;
+    if (endTimeIsBeforeNow) {
+      return null;
+    } else {
+      if (shift.timeToStart) {
+        return `Your next shift starts in: ${shift.timeToStart}`;
+      } else {
+        `Your shift should have started at ${shift.startTime}`;
+      }
+    }
+  };
 
   const renderNextShiftInfo = () => {
     if (!isClockedIn) {
       if (shift.today) {
         return (
           <View style={styles.nextShiftContainer}>
-            <Text style={styles.nextShiftText}>
-              {shift.timeToStart
-                ? `Your next shift starts in: ${shift.timeToStart}`
-                : `Your shift should have started at ${shift.startTime}`}
-            </Text>
+            <Text style={styles.nextShiftText}>{getNextShiftText()}</Text>
             <Text style={styles.text}>
               {shift.startTime} - {shift.endTime}
             </Text>

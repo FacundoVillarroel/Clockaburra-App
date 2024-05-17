@@ -50,10 +50,6 @@ const TimesheetScreen = () => {
     getTimesheetFromDb();
   }, [selectedWeek]);
 
-  const onRefresh = () => {
-    getTimesheetFromDb();
-  };
-
   return (
     <View style={styles.rootContainer}>
       <WeekSelector
@@ -85,7 +81,7 @@ const TimesheetScreen = () => {
             refreshControl={
               <RefreshControl
                 refreshing={loading}
-                onRefresh={onRefresh}
+                onRefresh={getTimesheetFromDb}
                 colors={[Colors.secondary, Colors.primary]}
                 tintColor={Colors.primary}
                 progressBackgroundColor="#ffffff"
