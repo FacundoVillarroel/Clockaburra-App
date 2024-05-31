@@ -58,7 +58,7 @@ const ShiftsScreen = () => {
             from={selectedWeek}
             to={getEndOfWeek(DateTime.fromFormat(selectedWeek, "ccc, dd LLL"))}
             totalHours={totalHours}
-            totalEarnings={totalHours * hourlyRate}
+            totalEarnings={(totalHours * hourlyRate).toFixed(1)}
           />
           <FlatList
             data={shifts}

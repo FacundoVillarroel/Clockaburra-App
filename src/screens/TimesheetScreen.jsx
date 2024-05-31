@@ -64,7 +64,7 @@ const TimesheetScreen = () => {
             from={getStartOfWeek(selectedWeek)}
             to={getEndOfWeek(selectedWeek)}
             totalHours={totalHours}
-            totalEarnings={totalHours * hourlyRate}
+            totalEarnings={(totalHours * hourlyRate).toFixed(1)}
           />
           <FlatList
             data={timesheets}
