@@ -86,8 +86,7 @@ export const setToken = (token) => {
         );
       }
       const user = await response.json();
-      const renewedToken =
-        response.headers.get("Authorization")?.split(" ")[1] || null;
+      const renewedToken = response.headers.get("Authorization").split(" ")[1];
       dispatch(
         set_token({
           token: renewedToken,
