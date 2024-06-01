@@ -70,12 +70,29 @@ export const login = (email, password, setLoading) => {
 export const setToken = (token) => {
   return async (dispatch) => {
     try {
-      const decodedToken = decodeToken(token);
+      const response = await fetch(`${BACKEND_IP}/auth/me`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        dispatch(
+          set_token({
+            token: null,
+            userId: null,
+            name: null,
+          })
+        );
+      }
+      const user = await response.json();
+      const renewedToken =
+        response.headers.get("Authorization")?.split(" ")[1] || null;
       dispatch(
         set_token({
-          token,
-          userId: decodedToken.userId,
-          name: decodedToken.userName,
+          token: renewedToken,
+          userId: user.userId,
+          name: user.userName,
         })
       );
     } catch (error) {
