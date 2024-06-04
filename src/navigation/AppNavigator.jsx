@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { useSelector, useDispatch } from "react-redux";
-import { loadToken } from "../helpers/jwtHelpers";
+import { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadToken } from '../helpers/jwtHelpers';
 
-import { setToken } from "../store/reducers/auth.slice";
-import BottomTabs from "./BottomTabs";
-import LoginScreen from "../screens/LoginScreen";
-import { clearUser, setUser } from "../store/reducers/user.slice";
-import { clearClock, setClock } from "../store/reducers/clock.slice";
+import { setToken } from '../store/reducers/auth.slice';
+import BottomTabs from './BottomTabs';
+import LoginScreen from '../screens/LoginScreen';
+import { clearUser, setUser } from '../store/reducers/user.slice';
+import { clearClock, setClock } from '../store/reducers/clock.slice';
 
 const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
@@ -23,8 +23,8 @@ const AppNavigator = () => {
   };
 
   const initializeUser = () => {
-    dispatch(setUser(userId));
-    dispatch(setClock(userId));
+    dispatch(setUser(userId, token));
+    dispatch(setClock(userId, token));
   };
 
   useEffect(() => {

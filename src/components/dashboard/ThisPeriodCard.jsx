@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-import ProgressBar from "./ProgressBar";
-import Card from "../ui/Card";
-import Loading from "../loading/Loading";
-import { DateTime } from "luxon";
-import Colors from "../../constants/colors";
+import ProgressBar from './ProgressBar';
+import Card from '../ui/Card';
+import Loading from '../loading/Loading';
+import { DateTime } from 'luxon';
+import Colors from '../../constants/colors';
 
-import { getStartOfWeek, getEndOfWeek } from "../../helpers/dateHelpers";
-import { BACKEND_IP } from "@env";
-import { useSelector } from "react-redux";
-import fetchDataFromDb from "../../helpers/fetch";
-import { calcTotalHours } from "../../helpers/calculationFunctions";
+import { getStartOfWeek, getEndOfWeek } from '../../helpers/dateHelpers';
+import { BACKEND_IP } from '@env';
+import { useSelector } from 'react-redux';
+import fetchDataFromDb from '../../helpers/fetch';
+import { calcTotalHours } from '../../helpers/calculationFunctions';
 
 const ThisPeriodCard = ({ shifts }) => {
   const [loading, setLoading] = useState(false);
   const [workingDays, setWorkingDays] = useState(0);
   const [daysWorked, setDaysWorked] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
-  const userId = useSelector((state) => state.user.id);
-  const hourlyRate = useSelector((state) => state.user.hourlyRate);
+  const { id: userId, hourlyRate } = useSelector((state) => state.user);
+  const token = useSelector((state) => state.auth.token);
 
   const monday = getStartOfWeek();
   const sunday = getEndOfWeek();
@@ -34,7 +34,8 @@ const ThisPeriodCard = ({ shifts }) => {
       const timesheetArray = await fetchDataFromDb(
         endpoint,
         userId,
-        selectedWeek
+        selectedWeek,
+        token
       );
 
       const uniqueDaysShift = new Set(
@@ -102,17 +103,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: Colors.primary,
   },
   cardContainer: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-evenly',
   },
   cardText: {
-    color: "white",
-    textAlign: "center",
+    color: 'white',
+    textAlign: 'center',
   },
   loadingContainer: {
     height: 200,

@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { DateTime } from "luxon";
+import { StyleSheet, Text, View, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { DateTime } from 'luxon';
 
-import useClockActions from "../../hooks/useClockActions";
+import useClockActions from '../../hooks/useClockActions';
 
-import Colors from "../../constants/colors";
+import Colors from '../../constants/colors';
 
-import CustomPressable from "../ui/CustomPressable";
-import Loading from "../loading/Loading";
+import CustomPressable from '../ui/CustomPressable';
+import Loading from '../loading/Loading';
 
 const Clock = ({ shift }) => {
   const [currentTime, setCurrentTime] = useState(
@@ -17,18 +17,19 @@ const Clock = ({ shift }) => {
   const userId = useSelector((state) => state.user.id);
   const isClockedIn = useSelector((state) => state.clock.clockedIn);
   const isOnBreak = useSelector((state) => state.clock.onBreak);
+  const token = useSelector((state) => state.auth.token);
   const [loading, setLoading] = useState(false);
 
-  const { onCheckIn, onCheckOut, onBreakStart, onBreakEnd } = useClockActions();
+  const { onClockIn, onClockOut, onBreakStart, onBreakEnd } = useClockActions();
 
   useEffect(() => {
     const syncClock = () => {
       const now = DateTime.local();
-      const nextMinute = now.plus({ minutes: 1 }).startOf("minute");
-      const delay = nextMinute.diff(now).as("milliseconds");
+      const nextMinute = now.plus({ minutes: 1 }).startOf('minute');
+      const delay = nextMinute.diff(now).as('milliseconds');
 
       const timeoutId = setTimeout(() => {
-        setCurrentTime(DateTime.local().toFormat("hh:mm a").toLowerCase());
+        setCurrentTime(DateTime.local().toFormat('hh:mm a').toLowerCase());
         syncClock(); // Resynchronize for the next minute
       }, delay);
       return () => clearTimeout(timeoutId); // Clear the timeout when unmounting the component
@@ -38,17 +39,17 @@ const Clock = ({ shift }) => {
 
   const onAction = (action) => {
     switch (action) {
-      case "Start Shift":
-        onCheckIn(userId, setLoading);
+      case 'Start Shift':
+        onClockIn(userId, setLoading, token);
         break;
-      case "End Shift":
-        onCheckOut(userId, setLoading);
+      case 'End Shift':
+        onClockOut(userId, setLoading, token);
         break;
-      case "Start Break":
-        onBreakStart(userId, setLoading);
+      case 'Start Break':
+        onBreakStart(userId, setLoading, token);
         break;
-      case "End Break":
-        onBreakEnd(userId, setLoading);
+      case 'End Break':
+        onBreakEnd(userId, setLoading, token);
         break;
       default:
         break;
@@ -56,11 +57,11 @@ const Clock = ({ shift }) => {
   };
 
   const onPressHandler = (action) => {
-    Alert.alert("Start your shift", `Are you sure you want to ${action}?`, [
-      { text: "No", style: "cancel" },
+    Alert.alert('Start your shift', `Are you sure you want to ${action}?`, [
+      { text: 'No', style: 'cancel' },
       {
-        text: "Yes",
-        style: "default",
+        text: 'Yes',
+        style: 'default',
         onPress: () => {
           onAction(action);
         },
@@ -69,14 +70,14 @@ const Clock = ({ shift }) => {
   };
 
   const manageWorkAction = () => {
-    return isClockedIn ? "End Shift" : "Start Shift";
+    return isClockedIn ? 'End Shift' : 'Start Shift';
   };
 
   const manageBreakAction = () => {
-    return isOnBreak ? "End Break" : "Start Break";
+    return isOnBreak ? 'End Break' : 'Start Break';
   };
   const getNextShiftText = () => {
-    const endTime = DateTime.fromFormat(shift.endTime, "HH:mm");
+    const endTime = DateTime.fromFormat(shift.endTime, 'HH:mm');
     const now = DateTime.local();
     const endTimeIsBeforeNow = endTime < now;
     if (endTimeIsBeforeNow) {
@@ -140,15 +141,15 @@ const Clock = ({ shift }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    alignItems: "center",
+    alignItems: 'center',
   },
   nextShiftContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 4,
   },
   nextShiftText: {
     color: Colors.primary,
-    fontWeight: "500",
+    fontWeight: '500',
     fontSize: 16,
   },
   dateText: {
@@ -156,9 +157,9 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "80%",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '80%',
     paddingTop: 8,
   },
   text: {
@@ -168,9 +169,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 
@@ -179,11 +180,11 @@ const propStyles = StyleSheet.create({
     flex: 0,
     paddingVertical: 3,
     paddingHorizontal: 12,
-    flexDirection: "row",
+    flexDirection: 'row',
     backgroundColor: Colors.primary,
     borderRadius: 10,
     elevation: 5,
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
   },
   image: {
     height: 50,
@@ -192,7 +193,7 @@ const propStyles = StyleSheet.create({
   text: {
     marginTop: 0,
     marginLeft: 5,
-    color: "white",
+    color: 'white',
   },
 });
 

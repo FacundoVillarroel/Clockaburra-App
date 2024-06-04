@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { BACKEND_IP } from "@env";
+import { createSlice } from '@reduxjs/toolkit';
+import { BACKEND_IP } from '@env';
 
 const initialState = {
   address: null,
@@ -15,7 +15,7 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     set_user: (state, action) => {
@@ -31,10 +31,14 @@ export const { set_user, clear_user } = userSlice.actions;
 
 export default userSlice.reducer;
 
-export const setUser = (userId) => {
+export const setUser = (userId, token) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(`${BACKEND_IP}/users/${userId}`);
+      const response = await fetch(`${BACKEND_IP}/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       const { user } = await response.json();
       dispatch(set_user(user));
     } catch (error) {

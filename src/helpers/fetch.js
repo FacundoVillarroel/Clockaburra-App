@@ -1,11 +1,21 @@
-import { DateTime } from "luxon";
-import { dateFormat } from "./dateHelpers";
+import { DateTime } from 'luxon';
+import { dateFormat } from './dateHelpers';
 
-const fetchDataFromDb = async (endpoint, userId, selectedWeek) => {
+const fetchDataFromDb = async (
+  endpoint,
+  userId,
+  selectedWeek,
+  token = null
+) => {
   try {
     const startDate = DateTime.fromFormat(selectedWeek, dateFormat).toISO();
     const response = await fetch(
-      `${endpoint}/user/${userId}/week/${startDate}`
+      `${endpoint}/user/${userId}/week/${startDate}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
     );
     const data = await response.json();
 
@@ -18,7 +28,7 @@ const fetchDataFromDb = async (endpoint, userId, selectedWeek) => {
       });
       return filteredData;
     } else {
-      throw new Error("Error getting data from db: ", data);
+      throw new Error('Error getting data from db: ', data);
     }
   } catch (error) {
     console.error(error.message);

@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
-import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
-import { useSelector } from "react-redux";
-import { DateTime } from "luxon";
+import { useEffect, useState } from 'react';
+import { View, FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { useSelector } from 'react-redux';
+import { DateTime } from 'luxon';
 
-import ShiftCard from "../components/shifts/ShiftCard";
-import WeekIndicator from "../components/shifts/WeekIndicator";
-import WeekSelector from "../components/shifts/WeekSelector";
-import Loading from "../components/loading/Loading";
-import { getStartOfWeek, getEndOfWeek } from "../helpers/dateHelpers";
+import ShiftCard from '../components/shifts/ShiftCard';
+import WeekIndicator from '../components/shifts/WeekIndicator';
+import WeekSelector from '../components/shifts/WeekSelector';
+import Loading from '../components/loading/Loading';
+import { getStartOfWeek, getEndOfWeek } from '../helpers/dateHelpers';
 
-import fetchDataFromDb from "../helpers/fetch";
-import { calcTotalHours } from "../helpers/calculationFunctions";
+import fetchDataFromDb from '../helpers/fetch';
+import { calcTotalHours } from '../helpers/calculationFunctions';
 
-import { BACKEND_IP } from "@env";
-import Colors from "../constants/colors";
+import { BACKEND_IP } from '@env';
+import Colors from '../constants/colors';
 
 const TimesheetScreen = () => {
   const [loading, setLoading] = useState(false);
   const [timesheets, setTimesheets] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(getStartOfWeek());
-  const userId = useSelector((state) => state.user.id);
-  const hourlyRate = useSelector((state) => state.user.hourlyRate);
+  const { id: userId, hourlyRate } = useSelector((state) => state.user);
+  const token = useSelector((state) => state.auth.token);
 
   const endPoint = `${BACKEND_IP}/timesheet`;
 
@@ -31,7 +31,8 @@ const TimesheetScreen = () => {
       const timesheetArray = await fetchDataFromDb(
         endPoint,
         userId,
-        selectedWeek
+        selectedWeek,
+        token
       );
       const hoursArray = timesheetArray.map(
         (timesheet) => timesheet.workedHours
