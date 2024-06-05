@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { saveToken, deleteToken, decodeToken } from "../../helpers/jwtHelpers";
+import { createSlice } from '@reduxjs/toolkit';
+import { saveToken, deleteToken, decodeToken } from '../../helpers/jwtHelpers';
 
-import { BACKEND_IP } from "@env";
+import { BACKEND_IP } from '@env';
 
 const initialState = {
   token: null,
@@ -10,7 +10,7 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     log_in: (state, action) => {
@@ -40,9 +40,9 @@ export const login = (email, password, setLoading) => {
     try {
       setLoading(true);
       const response = await fetch(`${BACKEND_IP}/auth/login`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
@@ -52,10 +52,10 @@ export const login = (email, password, setLoading) => {
 
       const user = await response.json();
       const token =
-        response.headers.get("Authorization")?.split(" ")[1] || null;
+        response.headers.get('Authorization')?.split(' ')[1] || null;
       if (!token) {
         setLoading(false);
-        return { isError: true, message: "Email o contraseña inválidos" };
+        return { isError: true, message: 'Email o contraseña inválidos' };
       }
       delete user.message;
       await saveToken(token);
@@ -71,7 +71,7 @@ export const setToken = (token) => {
   return async (dispatch) => {
     try {
       const response = await fetch(`${BACKEND_IP}/auth/me`, {
-        method: "GET",
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,7 +86,7 @@ export const setToken = (token) => {
         );
       }
       const user = await response.json();
-      const renewedToken = response.headers.get("Authorization").split(" ")[1];
+      const renewedToken = response.headers.get('Authorization').split(' ')[1];
       dispatch(
         set_token({
           token: renewedToken,
@@ -95,7 +95,7 @@ export const setToken = (token) => {
         })
       );
     } catch (error) {
-      console.log(error);
+      console.error('setToken: ', error);
     }
   };
 };
@@ -106,7 +106,7 @@ export const logout = () => {
       await deleteToken();
       dispatch(log_out());
     } catch (error) {
-      console.log(error);
+      console.error('logout:', error);
     }
   };
 };

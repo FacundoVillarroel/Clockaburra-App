@@ -14,6 +14,7 @@ import { calcTotalHours } from '../helpers/calculationFunctions';
 
 import { BACKEND_IP } from '@env';
 import Colors from '../constants/colors';
+import EmptyList from '../components/shifts/EmptyList';
 
 const TimesheetScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -67,28 +68,35 @@ const TimesheetScreen = () => {
             totalHours={totalHours}
             totalEarnings={(totalHours * hourlyRate).toFixed(1)}
           />
-          <FlatList
-            data={timesheets}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <ShiftCard
-                startDate={item.startDate}
-                endDate={item.endDate}
-                hours={item.workedHours}
-                breaks={item.breaks}
-                hourlyRate={hourlyRate}
-              />
-            )}
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={getTimesheetFromDb}
-                colors={[Colors.secondary, Colors.primary]}
-                tintColor={Colors.primary}
-                progressBackgroundColor="#ffffff"
-              />
-            }
-          />
+          {timesheets.length === 0 ? (
+            <EmptyList
+              iconName="calendar-clear-outline"
+              subtitle="You don't have timesheets for this week"
+            />
+          ) : (
+            <FlatList
+              data={timesheets}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <ShiftCard
+                  startDate={item.startDate}
+                  endDate={item.endDate}
+                  hours={item.workedHours}
+                  breaks={item.breaks}
+                  hourlyRate={hourlyRate}
+                />
+              )}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={getTimesheetFromDb}
+                  colors={[Colors.secondary, Colors.primary]}
+                  tintColor={Colors.primary}
+                  progressBackgroundColor="#ffffff"
+                />
+              }
+            />
+          )}
         </>
       )}
     </View>

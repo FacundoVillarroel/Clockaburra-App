@@ -42,7 +42,7 @@ export const setUser = (userId, token) => {
       const { user } = await response.json();
       dispatch(set_user(user));
     } catch (error) {
-      console.log(error);
+      console.error('setUser: ', error);
     }
   };
 };
@@ -52,7 +52,7 @@ export const clearUser = () => {
     try {
       dispatch(clear_user());
     } catch (error) {
-      console.log(error);
+      console.error('clearUser: ', error);
     }
   };
 };

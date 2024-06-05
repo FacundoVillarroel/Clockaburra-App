@@ -1,28 +1,40 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import { useSelector } from "react-redux";
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { useSelector } from 'react-redux';
 
-import Colors from "../constants/colors";
+import Colors from '../constants/colors';
 
 const Header = ({ navigation, route }) => {
   const name = useSelector((state) => state.user.name);
   const clockStatus = useSelector((state) => state.clock);
 
   const handlePress = () => {
-    navigation.navigate("profile");
+    navigation.navigate('profile');
   };
   const routeName = route.name[0].toUpperCase() + route.name.slice(1);
 
-  const textContent = routeName !== "Dashboard" ? routeName : "Business Name";
+  const textContent = routeName !== 'Dashboard' ? routeName : 'Business Name';
 
   const clockStatusText = () => {
     if (clockStatus.clockedIn) {
       if (clockStatus.onBreak) {
-        return "On Break";
+        return 'On Break';
       } else {
-        return "Clocked In";
+        return 'Clocked In';
       }
     } else {
-      return "Clocked out";
+      return 'Clocked out';
+    }
+  };
+
+  const getStatusColor = () => {
+    if (clockStatus.clockedIn) {
+      if (clockStatus.onBreak) {
+        return 'yellow';
+      } else {
+        return 'green';
+      }
+    } else {
+      return 'red';
     }
   };
 
@@ -32,12 +44,17 @@ const Header = ({ navigation, route }) => {
         <Text style={styles.title}>Hi {name}!</Text>
         <Text style={styles.text}>{textContent}</Text>
       </View>
-      <Pressable style={styles.subContainer} onPress={handlePress}>
+      <Pressable style={styles.pressable} onPress={handlePress}>
         <Image
           style={styles.image}
-          source={require("../../assets/logoClockaburra.png")}
+          source={require('../../assets/logoClockaburra.png')}
         />
-        <Text style={styles.statusText}>{clockStatusText()}</Text>
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>{clockStatusText()}</Text>
+          <View
+            style={{ ...styles.statusColor, backgroundColor: getStatusColor() }}
+          ></View>
+        </View>
       </Pressable>
     </View>
   );
@@ -46,27 +63,41 @@ const Header = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     backgroundColor: Colors.primary,
     marginBottom: 10,
   },
   subContainer: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
+  },
+  pressable: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     color: Colors.accent,
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   text: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
-    color: "white",
+    color: 'white',
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   statusText: {
-    color: "white",
+    color: 'white',
+  },
+  statusColor: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: 5,
   },
   image: {
     width: 60,
