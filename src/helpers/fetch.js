@@ -8,9 +8,11 @@ const fetchDataFromDb = async (
   token = null
 ) => {
   try {
-    const startDate = DateTime.fromFormat(selectedWeek, dateFormat).toISO();
+    const startDate = encodeURIComponent(
+      DateTime.fromFormat(selectedWeek, dateFormat).toISO()
+    );
     const response = await fetch(
-      `${endpoint}/user/${userId}/week/${startDate}`,
+      `${endpoint}/user/${userId}?startDate=${startDate}`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -18,7 +20,6 @@ const fetchDataFromDb = async (
       }
     );
     const data = await response.json();
-
     if (Array.isArray(data)) {
       const filteredData = data.filter((item) => item.endDate !== null);
       filteredData.sort((a, b) => {
