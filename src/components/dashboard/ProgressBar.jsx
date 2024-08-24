@@ -1,12 +1,15 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Colors from "../../constants/colors";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Colors from '../../constants/colors';
 
 const ProgressBar = ({ workingDays, daysWorked }) => {
   let percentage = (daysWorked / workingDays) * 100;
   if (isNaN(percentage)) {
     percentage = 0;
+  }
+  if (percentage > 100) {
+    percentage = 100;
   }
   return (
     <View style={styles.progressBarContainer}>
@@ -29,28 +32,28 @@ const ProgressBar = ({ workingDays, daysWorked }) => {
 
 const styles = StyleSheet.create({
   progressBarContainer: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 16,
     marginBottom: 8,
   },
   progressBar: {
     height: 20,
-    width: "85%",
+    width: '85%',
     backgroundColor: Colors.lightGray,
     borderRadius: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   progressTextContainer: {
     paddingLeft: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "15%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '15%',
   },
   progressTextPercentage: {
     color: Colors.primary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 18,
   },
 });

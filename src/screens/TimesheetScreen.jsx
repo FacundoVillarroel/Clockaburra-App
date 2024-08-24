@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import { useSelector } from 'react-redux';
-import { DateTime } from 'luxon';
 
 import ShiftCard from '../components/shifts/ShiftCard';
 import WeekIndicator from '../components/shifts/WeekIndicator';
@@ -44,7 +43,7 @@ const TimesheetScreen = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      console.error(error);
     }
   };
 

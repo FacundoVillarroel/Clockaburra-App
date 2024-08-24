@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView, RefreshControl } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import Clock from '../components/dashboard/Clock';
@@ -11,6 +11,7 @@ import { BACKEND_IP } from '@env';
 import Loading from '../components/loading/Loading';
 import fetchDataFromDb from '../helpers/fetch';
 import { calcTotalHours } from '../helpers/calculationFunctions';
+import Colors from '../constants/colors';
 
 const DashboardScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -94,14 +95,26 @@ const DashboardScreen = () => {
       {loading ? (
         <Loading />
       ) : (
-        <View>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={() => {
+                getShiftsFromDb(getStartOfWeek());
+              }}
+              colors={[Colors.secondary, Colors.primary]}
+              tintColor={Colors.primary}
+              progressBackgroundColor="#ffffff"
+            />
+          }
+        >
           <Clock shift={getNextShiftInfo()} />
           <ScheduleCard
             workingDays={getWorkingDays()}
             totalPayment={totalHours * hourlyRate}
           />
           <ThisPeriodCard shifts={shifts} />
-        </View>
+        </ScrollView>
       )}
     </>
   );

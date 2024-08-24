@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, Pressable, Animated } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { DateTime } from "luxon";
+import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { DateTime } from 'luxon';
 
-import Colors from "../../constants/colors";
-import { useState, useEffect } from "react";
+import Colors from '../../constants/colors';
+import { useState, useEffect } from 'react';
 
 const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
   const [expanded, setExpanded] = useState(false);
@@ -11,7 +11,7 @@ const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
 
   const startDateObj = DateTime.fromISO(startDate);
   const endDateObj = DateTime.fromISO(endDate);
-  const startDateFormatted = startDateObj.toFormat("ccc, dd LLL");
+  const startDateFormatted = startDateObj.toFormat('ccc, dd LLL');
   const from = startDateObj.toFormat("HH:mm a'").toLocaleLowerCase();
   const to = endDateObj.toFormat("HH:mm a'").toLocaleLowerCase();
   const totalHours = Math.floor(hours);
@@ -21,9 +21,9 @@ const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
 
   const getbreakHours = () => {
     if (breaks.length) {
-      const breakStart = DateTime.fromISO(breaks[0].timeStamp);
-      const breakEnd = DateTime.fromISO(breaks[1].timeStamp);
-      const diffMinutes = breakEnd.diff(breakStart, "minutes").minutes;
+      const breakStart = DateTime.fromISO(breaks[0].breakStart);
+      const breakEnd = DateTime.fromISO(breaks[0].breakEnd);
+      const diffMinutes = breakEnd.diff(breakStart, 'minutes').minutes;
 
       let diffFormatted;
 
@@ -35,8 +35,8 @@ const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
       }
       return {
         total: diffFormatted,
-        start: breakStart.toFormat("hh:mm a"),
-        end: breakEnd.toFormat("hh:mm a"),
+        start: breakStart.toFormat('hh:mm a'),
+        end: breakEnd.toFormat('hh:mm a'),
       };
     }
   };
@@ -51,7 +51,7 @@ const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "180deg"],
+    outputRange: ['0deg', '180deg'],
   });
 
   const onPressHandler = () => {
@@ -66,8 +66,8 @@ const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
           <View style={styles.timeContainer}>
             <Ionicons name="time-outline" size={14} color="white" />
             <Text style={styles.timeText}>
-              {" "}
-              {from} - {to}{" "}
+              {' '}
+              {from} - {to}{' '}
             </Text>
           </View>
         </View>
@@ -81,19 +81,19 @@ const ShiftCard = ({ startDate, endDate, hours, breaks, hourlyRate }) => {
         <Text style={styles.workPlaceText}>Working Place</Text>
         <Pressable onPress={onPressHandler}>
           <Animated.View style={{ transform: [{ rotate }] }}>
-            <Ionicons name={"chevron-down"} size={18} color="white" />
+            <Ionicons name={'chevron-down'} size={18} color="white" />
           </Animated.View>
         </Pressable>
       </View>
       {expanded && (
         <View style={styles.expansionContainer}>
           <Text style={styles.expansionText}>
-            {breaks.length ? `Breaks: ${getbreakHours().total} ` : "No Breaks"}
+            {breaks.length ? `Breaks: ${getbreakHours().total} ` : 'No Breaks'}
           </Text>
           <Text style={styles.expansionText}>
             {breaks.length
               ? `From: ${getbreakHours().start} - To: ${getbreakHours().end}`
-              : ""}
+              : ''}
           </Text>
         </View>
       )}
@@ -109,46 +109,46 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     marginVertical: 6,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   dateContainer: {},
   dayText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   timeContainer: {
     marginTop: 5,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  timeText: { color: "white" },
+  timeText: { color: 'white' },
   earningsContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 10,
   },
   earningsText: {
     color: Colors.primary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   bottomContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 12,
   },
   workPlaceText: {
-    color: "white",
+    color: 'white',
   },
   expansionContainer: {
-    flexDirection: "column",
+    flexDirection: 'column',
     paddingTop: 4,
   },
   expansionText: {
-    color: "white",
+    color: 'white',
     paddingVertical: 2,
   },
 });
