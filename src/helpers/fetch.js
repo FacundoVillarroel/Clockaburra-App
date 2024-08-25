@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { dateFormat, getEndOfWeek } from './dateHelpers';
+import { dateFormat, getEndOfWeek, getEndOfWeekISO } from './dateHelpers';
 
 const fetchDataFromDb = async (
   endpoint,
@@ -12,7 +12,7 @@ const fetchDataFromDb = async (
       DateTime.fromFormat(selectedWeek, dateFormat).toISO()
     );
     const endDate = encodeURIComponent(
-      DateTime.fromFormat(getEndOfWeek(selectedWeek), dateFormat).toISO()
+      getEndOfWeekISO(DateTime.fromFormat(selectedWeek, dateFormat))
     );
     const response = await fetch(
       `${endpoint}?userIds=${userId}&startDate=${startDate}&endDate=${endDate}`,
