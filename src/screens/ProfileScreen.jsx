@@ -1,45 +1,75 @@
-import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TextInput } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
-import ProfileHeader from "../components/profile/ProfileHeader";
-import Card from "../components/ui/Card";
-import Loading from "../components/loading/Loading";
-import Colors from "../constants/colors";
-import { logout } from "../store/reducers/auth.slice";
+import ProfileHeader from '../components/profile/ProfileHeader';
+import Card from '../components/ui/Card';
+import Loading from '../components/loading/Loading';
+import Colors from '../constants/colors';
+import { logout } from '../store/reducers/auth.slice';
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
+  const [editMode, setEditMode] = useState(false);
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
-
-  const userData = [
+  const [editableData, setEditableData] = useState([
     { address: user.address },
     { email: user.email },
     { name: user.name },
     { phoneNumber: user.phoneNumber },
     { surname: user.surname },
     { role: user.role },
-  ];
+  ]);
 
   const keyMappings = {
-    address: "Address",
-    email: "Email",
-    name: "Name",
-    phoneNumber: "Phone Number",
-    surname: "Surname",
-    role: "Role",
+    address: 'Address',
+    email: 'Email',
+    name: 'Name',
+    phoneNumber: 'Phone Number',
+    surname: 'Surname',
+    role: 'Role',
   };
 
-  const renderItem = ({ item }) => (
-    <Card>
-      <View style={styles.cardContainer}>
-        <Text style={styles.cardText}>
-          {keyMappings[Object.keys(item)[0]]} : {item[Object.keys(item)[0]]}
-        </Text>
-      </View>
-    </Card>
-  );
+  const handleInputChange = (key, value) => {
+    if (key === 'phoneNumber') {
+      value = parseInt(value);
+    }
+    setEditableData((prevData) => {
+      return prevData.map((item) => {
+        if (Object.keys(item)[0] === key) {
+          return { [key]: value };
+        }
+        return item;
+      });
+    });
+  };
+
+  const renderItem = ({ item }) => {
+    const key = Object.keys(item)[0];
+    let value = null;
+    if (key === 'phoneNumber') {
+      value = item[key].toString();
+    } else {
+      value = item[key];
+    }
+    return (
+      <Card>
+        <View style={styles.cardContainer}>
+          <Text style={styles.cardText}>
+            {keyMappings[Object.keys(item)[0]]} :{' '}
+          </Text>
+          <TextInput
+            style={[styles.cardText, editMode ? styles.cardTextInput : null]}
+            value={value}
+            onChangeText={(text) => handleInputChange(key, text)}
+            editable={editMode}
+            placeholder={keyMappings[key]}
+          />
+        </View>
+      </Card>
+    );
+  };
 
   const logoutHandler = async () => {
     try {
@@ -53,9 +83,17 @@ const ProfileScreen = () => {
     if (!user.id) {
       setLoading(true);
     } else {
+      setEditableData([
+        { address: user.address },
+        { email: user.email },
+        { name: user.name },
+        { phoneNumber: user.phoneNumber },
+        { surname: user.surname },
+        { role: user.role },
+      ]);
       setLoading(false);
     }
-  }, [user.id]);
+  }, [user.id, user]);
 
   return (
     <>
@@ -63,11 +101,14 @@ const ProfileScreen = () => {
         <Loading />
       ) : (
         <View style={styles.rootContainer}>
-          <ProfileHeader logoutHandler={logoutHandler} />
+          <ProfileHeader
+            logoutHandler={logoutHandler}
+            setEditMode={setEditMode}
+          />
           <View style={styles.contentContainer}>
             <Text style={styles.subTitle}>Pesonal Details</Text>
             <FlatList
-              data={userData}
+              data={editableData}
               renderItem={renderItem}
               keyExtractor={(item, index) => Object.keys(item)[0]}
             />
@@ -87,15 +128,21 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: Colors.primary,
     marginVertical: 8,
   },
   cardContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   cardText: {
-    color: "white",
+    color: 'white',
+  },
+  cardTextInput: {
+    borderWidth: 1,
+    borderColor: 'white',
+    paddingHorizontal: 6,
   },
 });
 

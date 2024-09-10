@@ -1,19 +1,23 @@
-import { View, StyleSheet, Image, Text, Pressable, Alert } from "react-native";
+import { View, StyleSheet, Image, Text, Pressable, Alert } from 'react-native';
 
-import { Ionicons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
 
-import Colors from "../../constants/colors";
+import Colors from '../../constants/colors';
 
-const ProfileHeader = ({ logoutHandler }) => {
+const ProfileHeader = ({ logoutHandler, setEditMode }) => {
   const name = useSelector((state) => state.user.name);
   const surname = useSelector((state) => state.user.surname);
 
   const onLogoutPress = () => {
-    Alert.alert("Log Out", "Are you sure you want to Log Out?", [
-      { text: "No", style: "cancel" },
-      { text: "Yes", style: "default", onPress: logoutHandler },
+    Alert.alert('Log Out', 'Are you sure you want to Log Out?', [
+      { text: 'No', style: 'cancel' },
+      { text: 'Yes', style: 'default', onPress: logoutHandler },
     ]);
+  };
+
+  const handleEdit = () => {
+    setEditMode((editMode) => !editMode);
   };
 
   return (
@@ -22,7 +26,7 @@ const ProfileHeader = ({ logoutHandler }) => {
         <View style={styles.imageContainer}>
           <Image
             style={styles.image}
-            source={require("../../../assets/logoClockaburra.png")}
+            source={require('../../../assets/logoClockaburra.png')}
           />
         </View>
         <Text style={styles.text}>
@@ -31,10 +35,10 @@ const ProfileHeader = ({ logoutHandler }) => {
       </View>
       <View style={styles.iconsContainer}>
         <Pressable onPress={onLogoutPress}>
-          <Ionicons name="log-out" color={"white"} size={35} />
+          <Ionicons name="log-out" color={'white'} size={35} />
         </Pressable>
-        <Pressable>
-          <Ionicons name="ellipsis-horizontal" color={"white"} size={35} />
+        <Pressable onPress={handleEdit}>
+          <Ionicons name="ellipsis-horizontal" color={'white'} size={35} />
         </Pressable>
       </View>
     </View>
@@ -43,14 +47,14 @@ const ProfileHeader = ({ logoutHandler }) => {
 
 const styles = StyleSheet.create({
   rootContainer: {
-    width: "100%",
+    width: '100%',
     height: 200,
     backgroundColor: Colors.primary,
   },
   userDataContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageContainer: {
     borderColor: Colors.accent,
@@ -58,9 +62,9 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 50,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     width: 150,
@@ -68,15 +72,15 @@ const styles = StyleSheet.create({
   },
   text: {
     paddingTop: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
     color: Colors.accent,
   },
   iconsContainer: {
-    position: "absolute",
-    height: "100%",
-    justifyContent: "space-evenly",
-    alignContent: "center",
+    position: 'absolute',
+    height: '100%',
+    justifyContent: 'space-evenly',
+    alignContent: 'center',
     right: 25,
   },
 });
