@@ -7,6 +7,7 @@ import Card from '../components/ui/Card';
 import Loading from '../components/loading/Loading';
 import Colors from '../constants/colors';
 import { logout } from '../store/reducers/auth.slice';
+import CustomPressable from '../components/ui/CustomPressable';
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -95,15 +96,20 @@ const ProfileScreen = () => {
     }
   }, [user.id, user]);
 
+  const onConfirm = () => {
+    console.log('Changed');
+  };
+
   return (
     <>
       {loading ? (
         <Loading />
       ) : (
-        <View style={styles.rootContainer}>
+        <View style={[styles.rootContainer, editMode ? { flex: 0.55 } : null]}>
           <ProfileHeader
             logoutHandler={logoutHandler}
             setEditMode={setEditMode}
+            editMode={editMode}
           />
           <View style={styles.contentContainer}>
             <Text style={styles.subTitle}>Pesonal Details</Text>
@@ -112,6 +118,16 @@ const ProfileScreen = () => {
               renderItem={renderItem}
               keyExtractor={(item, index) => Object.keys(item)[0]}
             />
+            {editMode && (
+              <View style={styles.buttonContainer}>
+                <CustomPressable
+                  style={styles.confirmButton}
+                  onPress={onConfirm}
+                >
+                  <Text style={styles.confirmText}>Confirm</Text>
+                </CustomPressable>
+              </View>
+            )}
           </View>
         </View>
       )}
@@ -121,7 +137,7 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   rootContainer: {
-    flex: 1,
+    flex: 0.65,
   },
   contentContainer: {
     padding: 16,
@@ -143,6 +159,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     paddingHorizontal: 6,
+  },
+  buttonContainer: {
+    marginTop: 10,
+  },
+  confirmButton: {
+    backgroundColor: Colors.accent,
+  },
+  confirmText: {
+    fontSize: 20,
+    color: Colors.primary,
   },
 });
 

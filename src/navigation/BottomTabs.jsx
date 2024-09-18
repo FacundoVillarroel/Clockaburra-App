@@ -1,14 +1,14 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-import Colors from "../constants/colors";
-import Header from "../components/Header";
-import DashboardScreen from "../screens/DashboardScreen";
-import ShiftsScreen from "../screens/ShiftsScreen";
-import TimesheetScreen from "../screens/TimesheetScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import { useSelector } from "react-redux";
-import Loading from "../components/loading/Loading";
+import Colors from '../constants/colors';
+import Header from '../components/Header';
+import DashboardScreen from '../screens/DashboardScreen';
+import ShiftsScreen from '../screens/ShiftsScreen';
+import TimesheetScreen from '../screens/TimesheetScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import { useSelector } from 'react-redux';
+import Loading from '../components/loading/Loading';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +29,7 @@ const BottomTabs = () => {
               minHeight: 60,
             },
             tabBarActiveTintColor: Colors.accent,
-            tabBarInactiveTintColor: "white",
+            tabBarInactiveTintColor: 'white',
             tabBarLabelStyle: { fontSize: 12, paddingBottom: 8 },
           }}
         >
@@ -37,7 +37,7 @@ const BottomTabs = () => {
             name="dashboard"
             component={DashboardScreen}
             options={{
-              tabBarLabel: "Dashboard",
+              tabBarLabel: 'Dashboard',
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="home" color={color} size={size} />
               ),
@@ -47,7 +47,7 @@ const BottomTabs = () => {
             name="shifts"
             component={ShiftsScreen}
             options={{
-              tabBarLabel: "Shifts",
+              tabBarLabel: 'Shifts',
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="layers" color={color} size={size} />
               ),
@@ -57,7 +57,7 @@ const BottomTabs = () => {
             name="timesheet"
             component={TimesheetScreen}
             options={{
-              tabBarLabel: "Timesheet",
+              tabBarLabel: 'Timesheet',
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="calendar-outline" color={color} size={size} />
               ),
@@ -68,7 +68,7 @@ const BottomTabs = () => {
             component={ProfileScreen}
             options={{
               headerShown: false,
-              tabBarLabel: "Profile",
+              tabBarLabel: 'Profile',
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="person" color={color} size={size} />
               ),
