@@ -96,9 +96,7 @@ const ProfileScreen = () => {
     }
   }, [user.id, user]);
 
-  const onConfirm = () => {
-    console.log('Changed');
-  };
+  const onConfirm = () => {};
 
   return (
     <>
