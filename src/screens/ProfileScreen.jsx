@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  Alert,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ProfileHeader from '../components/profile/ProfileHeader';
@@ -7,21 +14,16 @@ import Card from '../components/ui/Card';
 import Loading from '../components/loading/Loading';
 import Colors from '../constants/colors';
 import { logout } from '../store/reducers/auth.slice';
+import { updateUser } from '../store/reducers/user.slice';
 import CustomPressable from '../components/ui/CustomPressable';
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
   const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.auth.token);
   const [loading, setLoading] = useState(false);
-  const [editableData, setEditableData] = useState([
-    { address: user.address },
-    { email: user.email },
-    { name: user.name },
-    { phoneNumber: user.phoneNumber },
-    { surname: user.surname },
-    { role: user.role },
-  ]);
+  const [editableData, setEditableData] = useState([]);
 
   const keyMappings = {
     address: 'Address',
@@ -30,7 +32,18 @@ const ProfileScreen = () => {
     phoneNumber: 'Phone Number',
     surname: 'Surname',
     role: 'Role',
+    department: 'Department',
   };
+
+  const getUserData = () => [
+    { address: user.address },
+    { email: user.email },
+    { name: user.name },
+    { phoneNumber: user.phoneNumber },
+    { surname: user.surname },
+    { role: user.role },
+    { department: user.department },
+  ];
 
   const handleInputChange = (key, value) => {
     if (key === 'phoneNumber') {
@@ -54,6 +67,9 @@ const ProfileScreen = () => {
     } else {
       value = item[key];
     }
+
+    const isNonEditableField =
+      key === 'role' || key === 'department' || key === 'email';
     return (
       <Card>
         <View style={styles.cardContainer}>
@@ -61,10 +77,13 @@ const ProfileScreen = () => {
             {keyMappings[Object.keys(item)[0]]} :{' '}
           </Text>
           <TextInput
-            style={[styles.cardText, editMode ? styles.cardTextInput : null]}
+            style={[
+              styles.cardText,
+              editMode && !isNonEditableField ? styles.cardTextInput : null,
+            ]}
             value={value}
             onChangeText={(text) => handleInputChange(key, text)}
-            editable={editMode}
+            editable={editMode && !isNonEditableField}
             placeholder={keyMappings[key]}
           />
         </View>
@@ -76,7 +95,7 @@ const ProfileScreen = () => {
     try {
       dispatch(logout());
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -84,19 +103,58 @@ const ProfileScreen = () => {
     if (!user.id) {
       setLoading(true);
     } else {
-      setEditableData([
-        { address: user.address },
-        { email: user.email },
-        { name: user.name },
-        { phoneNumber: user.phoneNumber },
-        { surname: user.surname },
-        { role: user.role },
-      ]);
+      setEditableData(getUserData());
       setLoading(false);
     }
-  }, [user.id, user]);
+  }, [user]);
 
-  const onConfirm = () => {};
+  const handleEditMode = () => {
+    if (editMode) {
+      Alert.alert(
+        'Cancel changes?',
+        'Are you sure you want to cancel your changes?',
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: () => {
+              setEditMode(false);
+              setEditableData(getUserData());
+            },
+          },
+        ]
+      );
+    } else {
+      setEditMode(true);
+    }
+  };
+
+  const onConfirm = () => {
+    Alert.alert(
+      'Update details',
+      'Are you sure you want to update your details?',
+      [
+        { text: 'No', style: 'cancel' },
+        {
+          text: 'Yes',
+          style: 'default',
+          onPress: () => {
+            const userUpdate = editableData.reduce((acc, item) => {
+              const key = Object.keys(item)[0]; // Gets the key of the current object
+              acc[key] = item[key]; // Assigns the value to the accumulator object
+              return acc; // Returns the accumulator for the next iteration
+            }, {});
+
+            dispatch(updateUser(userUpdate, user.id, token, setLoading));
+            setEditMode(false);
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <>
@@ -106,7 +164,7 @@ const ProfileScreen = () => {
         <View style={[styles.rootContainer, editMode ? { flex: 0.55 } : null]}>
           <ProfileHeader
             logoutHandler={logoutHandler}
-            setEditMode={setEditMode}
+            handleEditMode={handleEditMode}
             editMode={editMode}
           />
           <View style={styles.contentContainer}>

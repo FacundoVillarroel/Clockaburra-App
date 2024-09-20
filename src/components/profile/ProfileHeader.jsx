@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import Colors from '../../constants/colors';
 
-const ProfileHeader = ({ logoutHandler, setEditMode, editMode }) => {
+const ProfileHeader = ({ logoutHandler, handleEditMode, editMode }) => {
   const name = useSelector((state) => state.user.name);
   const surname = useSelector((state) => state.user.surname);
 
@@ -14,10 +14,6 @@ const ProfileHeader = ({ logoutHandler, setEditMode, editMode }) => {
       { text: 'No', style: 'cancel' },
       { text: 'Yes', style: 'default', onPress: logoutHandler },
     ]);
-  };
-
-  const handleEdit = () => {
-    setEditMode((editMode) => !editMode);
   };
 
   return (
@@ -37,7 +33,7 @@ const ProfileHeader = ({ logoutHandler, setEditMode, editMode }) => {
         <Pressable onPress={onLogoutPress}>
           <Ionicons name="log-out" color={'white'} size={35} />
         </Pressable>
-        <Pressable onPress={handleEdit}>
+        <Pressable onPress={handleEditMode}>
           <Ionicons
             name="pencil-sharp"
             color={editMode ? Colors.accent : 'white'}

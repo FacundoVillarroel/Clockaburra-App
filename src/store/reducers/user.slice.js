@@ -21,13 +21,16 @@ const userSlice = createSlice({
     set_user: (state, action) => {
       return action.payload;
     },
+    update_user: (state, action) => {
+      return { ...state, ...action.payload };
+    },
     clear_user: (state, action) => {
       state.user = initialState;
     },
   },
 });
 
-export const { set_user, clear_user } = userSlice.actions;
+export const { set_user, update_user, clear_user } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -43,6 +46,30 @@ export const setUser = (userId, token) => {
       dispatch(set_user(user));
     } catch (error) {
       console.error('setUser: ', error);
+    }
+  };
+};
+
+export const updateUser = (userUpdate, userId, token, setLoading) => {
+  return async (dispatch) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${BACKEND_IP}/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userUpdate),
+      });
+      const data = await response.json();
+      if (data.updated) {
+        dispatch(update_user(userUpdate));
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error('updateUser: ', error);
     }
   };
 };
