@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { DateTime } from 'luxon';
 
 import ProfileHeader from '../components/profile/ProfileHeader';
 import Card from '../components/ui/Card';
@@ -33,6 +34,8 @@ const ProfileScreen = () => {
     surname: 'Surname',
     role: 'Role',
     department: 'Department',
+    startDate: 'Start Date',
+    hourlyRate: 'Hourly Rate',
   };
 
   const getUserData = () => [
@@ -43,6 +46,8 @@ const ProfileScreen = () => {
     { surname: user.surname },
     { role: user.role },
     { department: user.department },
+    { startDate: user.startDate.split('T')[0] },
+    { hourlyRate: user.hourlyRate.toString() },
   ];
 
   const handleInputChange = (key, value) => {
@@ -69,7 +74,11 @@ const ProfileScreen = () => {
     }
 
     const isNonEditableField =
-      key === 'role' || key === 'department' || key === 'email';
+      key === 'role' ||
+      key === 'department' ||
+      key === 'email' ||
+      key === 'startDate' ||
+      key === 'hourlyRate';
     return (
       <Card>
         <View style={styles.cardContainer}>
@@ -213,6 +222,7 @@ const styles = StyleSheet.create({
   },
   cardTextInput: {
     borderWidth: 1,
+    borderRadius: 10,
     borderColor: 'white',
     paddingHorizontal: 6,
   },
