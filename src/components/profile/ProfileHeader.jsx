@@ -4,8 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 
 import Colors from '../../constants/colors';
+import ImageSelector from '../imageSelector/ImageSelector';
 
-const ProfileHeader = ({ logoutHandler, handleEditMode, editMode }) => {
+const ProfileHeader = ({
+  logoutHandler,
+  handleEditMode,
+  editMode,
+  userImage,
+}) => {
   const name = useSelector((state) => state.user.name);
   const surname = useSelector((state) => state.user.surname);
 
@@ -16,15 +22,20 @@ const ProfileHeader = ({ logoutHandler, handleEditMode, editMode }) => {
     ]);
   };
 
+  const onImagePicked = (image) => {
+    handleEditMode(true);
+    console.log(image);
+  };
+
   return (
     <View style={styles.rootContainer}>
       <View style={styles.userDataContainer}>
-        <View style={styles.imageContainer}>
+        <ImageSelector onImagePicked={onImagePicked} image={userImage}>
           <Image
             style={styles.image}
             source={require('../../../assets/logoClockaburra.png')}
           />
-        </View>
+        </ImageSelector>
         <Text style={styles.text}>
           {name} {surname}
         </Text>
@@ -35,8 +46,8 @@ const ProfileHeader = ({ logoutHandler, handleEditMode, editMode }) => {
         </Pressable>
         <Pressable onPress={handleEditMode}>
           <Ionicons
-            name="pencil-sharp"
-            color={editMode ? Colors.accent : 'white'}
+            name={editMode ? 'close' : 'pencil-sharp'}
+            color={editMode ? 'red' : 'white'}
             size={35}
           />
         </Pressable>

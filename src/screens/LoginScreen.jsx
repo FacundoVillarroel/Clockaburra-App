@@ -102,21 +102,6 @@ const LoginScreen = () => {
           {isLoading ? 'Loading...' : 'Login'}
         </Text>
       </TouchableOpacity>
-      <View style={styles.dividerContainer}>
-        <View style={styles.dividerLine} />
-        <Text style={styles.dividerText}>or</Text>
-        <View style={styles.dividerLine} />
-      </View>
-      <TouchableOpacity style={styles.loginWithContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <MaterialCommunityIcons
-            name="gmail"
-            size={24}
-            color={Colors.primary}
-          />
-          <Text style={styles.loginWithText}>Login with Gmail</Text>
-        </View>
-      </TouchableOpacity>
       <Text style={styles.forgotPassword}>Forgot password?</Text>
     </View>
   );
@@ -190,22 +175,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 8,
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '80%',
-    marginBottom: 16,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#ccc',
-  },
-  dividerText: {
-    paddingHorizontal: 16,
-    color: '#999',
-    fontSize: 16,
   },
   forgotPassword: {
     fontSize: 16,

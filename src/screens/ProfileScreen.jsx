@@ -8,7 +8,6 @@ import {
   Alert,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { DateTime } from 'luxon';
 
 import ProfileHeader from '../components/profile/ProfileHeader';
 import Card from '../components/ui/Card';
