@@ -177,6 +177,7 @@ const ProfileScreen = () => {
             logoutHandler={logoutHandler}
             handleEditMode={handleEditMode}
             editMode={editMode}
+            profileImageUrl={user.image}
             setNewProfileImage={setNewProfileImage}
           />
           <View style={styles.contentContainer}>

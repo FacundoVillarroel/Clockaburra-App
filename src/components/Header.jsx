@@ -2,9 +2,10 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import Colors from '../constants/colors';
+const defaultImage = require('../../assets/logoClockaburra.png');
 
 const Header = ({ navigation, route }) => {
-  const name = useSelector((state) => state.user.name);
+  const { name, image } = useSelector((state) => state.user);
   const clockStatus = useSelector((state) => state.clock);
 
   const handlePress = () => {
@@ -45,10 +46,12 @@ const Header = ({ navigation, route }) => {
         <Text style={styles.text}>{textContent}</Text>
       </View>
       <Pressable style={styles.pressable} onPress={handlePress}>
-        <Image
-          style={styles.image}
-          source={require('../../assets/logoClockaburra.png')}
-        />
+        <View style={styles.imageContainter}>
+          <Image
+            style={styles.image}
+            source={image ? { uri: image } : defaultImage}
+          />
+        </View>
         <View style={styles.statusContainer}>
           <Text style={styles.statusText}>{clockStatusText()}</Text>
           <View
@@ -99,10 +102,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginLeft: 5,
   },
-  image: {
-    width: 60,
+  imageContainter: {
+    borderColor: Colors.accent,
+    borderWidth: 2,
     height: 60,
+    width: 60,
+    borderRadius: 50,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 3,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
 });
 

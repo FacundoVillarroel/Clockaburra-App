@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 
 import Colors from '../../constants/colors';
 import ImageSelector from '../imageSelector/ImageSelector';
+const defaultImage = require('../../../assets/logoClockaburra.png');
 
 const ProfileHeader = ({
   logoutHandler,
   handleEditMode,
   editMode,
+  profileImageUrl,
   setNewProfileImage,
 }) => {
   const name = useSelector((state) => state.user.name);
@@ -35,7 +37,7 @@ const ProfileHeader = ({
         <ImageSelector onImagePicked={onImagePicked} editMode={editMode}>
           <Image
             style={styles.image}
-            source={require('../../../assets/logoClockaburra.png')}
+            source={profileImageUrl ? { uri: profileImageUrl } : defaultImage}
           />
         </ImageSelector>
         <Text style={styles.text}>

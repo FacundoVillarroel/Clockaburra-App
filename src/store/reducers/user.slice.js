@@ -68,9 +68,13 @@ export const updateUser = (userUpdate, userId, token, setLoading) => {
         });
         const response = await fetch(`${BACKEND_IP}/images`, {
           method: 'POST',
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
           body: formData,
         });
+
         const imageUrl = await response.json();
         userUpdate.image = imageUrl;
       }
