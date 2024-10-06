@@ -66,7 +66,7 @@ export const updateUser = (userUpdate, userId, token, setLoading) => {
           name: fileName,
           type: `image/${fileType}`,
         });
-        const response = await fetch(`${BACKEND_IP}/images`, {
+        const response = await fetch(`${BACKEND_IP}/images/profile-images`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
