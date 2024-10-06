@@ -54,6 +54,27 @@ export const updateUser = (userUpdate, userId, token, setLoading) => {
   return async (dispatch) => {
     try {
       setLoading(true);
+      // If there is an image, it is sent to the backend, which stores it and returns its URL, which is added to the userUpdate
+      if (userUpdate.image) {
+        const formData = new FormData();
+        const fileName = userUpdate.image.split('/').pop();
+
+        const fileType = fileName.split('.').pop();
+
+        formData.append('image', {
+          uri: userUpdate.image,
+          name: fileName,
+          type: `image/${fileType}`,
+        });
+        const response = await fetch(`${BACKEND_IP}/images`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'multipart/form-data' },
+          body: formData,
+        });
+        const imageUrl = await response.json();
+        userUpdate.image = imageUrl;
+      }
+      // UserUpdate is sent to the backend
       const response = await fetch(`${BACKEND_IP}/users/${userId}`, {
         method: 'PUT',
         headers: {

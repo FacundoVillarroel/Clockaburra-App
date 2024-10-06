@@ -10,7 +10,7 @@ const ProfileHeader = ({
   logoutHandler,
   handleEditMode,
   editMode,
-  userImage,
+  setNewProfileImage,
 }) => {
   const name = useSelector((state) => state.user.name);
   const surname = useSelector((state) => state.user.surname);
@@ -24,13 +24,15 @@ const ProfileHeader = ({
 
   const onImagePicked = (image) => {
     handleEditMode(true);
-    console.log(image);
+    if (image.uri) {
+      setNewProfileImage(image.uri);
+    }
   };
 
   return (
     <View style={styles.rootContainer}>
       <View style={styles.userDataContainer}>
-        <ImageSelector onImagePicked={onImagePicked} image={userImage}>
+        <ImageSelector onImagePicked={onImagePicked} editMode={editMode}>
           <Image
             style={styles.image}
             source={require('../../../assets/logoClockaburra.png')}

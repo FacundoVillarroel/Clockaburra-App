@@ -1,5 +1,5 @@
 import { TouchableOpacity, Image } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Modal from '../ui/CustomModal';
 import {
@@ -17,6 +17,7 @@ const ImageSelector = ({
   imageStyle,
   image = null,
   index,
+  editMode,
 }) => {
   const [pickedUrl, setPickedUrl] = useState(image);
   const [modalVisible, setModalVisible] = useState(false);
@@ -56,6 +57,10 @@ const ImageSelector = ({
     }
   };
 
+  useEffect(() => {
+    if (!editMode) return setPickedUrl(null);
+  }, [editMode]);
+
   return (
     <>
       {
@@ -63,7 +68,7 @@ const ImageSelector = ({
           style={{ ...styles.container, ...style }}
           onPress={() => setModalVisible(!modalVisible)}
         >
-          {pickedUrl ? (
+          {pickedUrl && editMode ? (
             <Image
               style={{ ...styles.image, ...imageStyle }}
               source={{ uri: pickedUrl }}

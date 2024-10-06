@@ -24,6 +24,7 @@ const ProfileScreen = () => {
   const token = useSelector((state) => state.auth.token);
   const [loading, setLoading] = useState(false);
   const [editableData, setEditableData] = useState([]);
+  const [newProfileImage, setNewProfileImage] = useState(null);
 
   const keyMappings = {
     address: 'Address',
@@ -155,7 +156,9 @@ const ProfileScreen = () => {
               acc[key] = item[key]; // Assigns the value to the accumulator object
               return acc; // Returns the accumulator for the next iteration
             }, {});
-
+            if (newProfileImage) {
+              userUpdate.image = newProfileImage;
+            }
             dispatch(updateUser(userUpdate, user.id, token, setLoading));
             setEditMode(false);
           },
@@ -174,6 +177,7 @@ const ProfileScreen = () => {
             logoutHandler={logoutHandler}
             handleEditMode={handleEditMode}
             editMode={editMode}
+            setNewProfileImage={setNewProfileImage}
           />
           <View style={styles.contentContainer}>
             <Text style={styles.subTitle}>Pesonal Details</Text>

@@ -1,4 +1,11 @@
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -19,31 +26,45 @@ const ModalComponent = ({
       transparent
       animationType="slide"
     >
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.btnCloseContainer}
-          onPress={() => setModalVisible(!modalVisible)}
-        >
-          <Text style={styles.btnCloseText}> X </Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity
-            style={styles.touchableContainer}
-            onPress={() => onPress(option1.action)}
-          >
-            <Ionicons name={option1.icon} size={30} color={Colors.primary} />
-            <Text style={styles.btnText}>{option1.text}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.touchableContainer}
-            onPress={() => onPress(option2.action)}
-          >
-            <Ionicons name={option2.icon} size={30} color={Colors.primary} />
-            <Text style={styles.btnText}>{option2.text}</Text>
-          </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <View style={styles.container}>
+              <TouchableOpacity
+                style={styles.btnCloseContainer}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Ionicons name="close" size={30} color={Colors.primary} />
+              </TouchableOpacity>
+              <Text style={styles.title}>{title}</Text>
+              <View style={styles.btnContainer}>
+                <TouchableOpacity
+                  style={styles.touchableContainer}
+                  onPress={() => onPress(option1.action)}
+                >
+                  <Ionicons
+                    name={option1.icon}
+                    size={40}
+                    color={Colors.primary}
+                  />
+                  <Text style={styles.btnText}>{option1.text}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.touchableContainer}
+                  onPress={() => onPress(option2.action)}
+                >
+                  <Ionicons
+                    name={option2.icon}
+                    size={40}
+                    color={Colors.primary}
+                  />
+                  <Text style={styles.btnText}>{option2.text}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
@@ -53,17 +74,17 @@ export default ModalComponent;
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
-    marginHorizontal: '10%',
-    marginVertical: '50%',
     width: '80%',
     height: 300,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderWidth: 2,
-    borderColor: Colors.primary,
+    borderWidth: 4,
+    borderColor: Colors.accent,
     borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -72,7 +93,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
-
     elevation: 10,
   },
   btnCloseContainer: {
@@ -80,11 +100,10 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  btnCloseText: {
-    fontFamily: 'Dosis-Bold',
-  },
   title: {
     fontFamily: 'Dosis-Bold',
+    color: Colors.primary,
+    fontSize: 18,
     paddingVertical: 30,
   },
   btnContainer: {
