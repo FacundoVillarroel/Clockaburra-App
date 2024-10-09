@@ -50,7 +50,13 @@ export const setUser = (userId, token) => {
   };
 };
 
-export const updateUser = (userUpdate, userId, token, setLoading) => {
+export const updateUser = (
+  userUpdate,
+  userId,
+  token,
+  setLoading,
+  oldImageUrl = ''
+) => {
   return async (dispatch) => {
     try {
       setLoading(true);
@@ -66,15 +72,21 @@ export const updateUser = (userUpdate, userId, token, setLoading) => {
           name: fileName,
           type: `image/${fileType}`,
         });
+        const filePath = oldImageUrl
+          ? oldImageUrl.split('/o/')[1].split('?')[0]
+          : '';
+        formData.append('filePath', filePath);
+
         const response = await fetch(`${BACKEND_IP}/images/profile-images`, {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
           },
           body: formData,
         });
-
+        if (!response.ok) {
+          return alert('An error has occured, please try again later');
+        }
         const imageUrl = await response.json();
         userUpdate.image = imageUrl;
       }

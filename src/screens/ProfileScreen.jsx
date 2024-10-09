@@ -159,7 +159,9 @@ const ProfileScreen = () => {
             if (newProfileImage) {
               userUpdate.image = newProfileImage;
             }
-            dispatch(updateUser(userUpdate, user.id, token, setLoading));
+            dispatch(
+              updateUser(userUpdate, user.id, token, setLoading, user.image)
+            );
             setEditMode(false);
           },
         },
