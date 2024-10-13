@@ -10,10 +10,11 @@ import Colors from '../../constants/colors';
 import CustomPressable from '../ui/CustomPressable';
 import Loading from '../loading/Loading';
 
-const Clock = ({ shift }) => {
+const Clock = ({ shifts }) => {
   const [currentTime, setCurrentTime] = useState(
     DateTime.local().toFormat("hh:mm a'").toLocaleLowerCase()
   );
+  const [shift, setShift] = useState({});
   const userId = useSelector((state) => state.user.id);
   const isClockedIn = useSelector((state) => state.clock.clockedIn);
   const isOnBreak = useSelector((state) => state.clock.onBreak);
@@ -36,6 +37,48 @@ const Clock = ({ shift }) => {
     };
     syncClock(); // Start the initial synchronization
   }, []);
+
+  useEffect(() => {
+    setShift(getNextShiftInfo());
+  }, [currentTime, shifts]);
+
+  const getNextShiftInfo = () => {
+    const todayISO = DateTime.local().toISODate();
+    const todayShift = shifts.find(
+      (shift) => DateTime.fromISO(shift.startDate).toISODate() === todayISO
+    );
+    if (!todayShift) {
+      return { today: false };
+    }
+    const now = DateTime.local();
+    const startDateTime = DateTime.fromISO(todayShift.startDate);
+    const endDateTime = DateTime.fromISO(todayShift.endDate);
+
+    const today = now.hasSame(startDateTime, 'day');
+
+    const diff = startDateTime.diff(now, ['hours', 'minutes']);
+    const hours = Math.floor(diff.hours);
+    const minutes = Math.round(diff.minutes % 60);
+
+    let timeToStart;
+    if (hours > 0 || minutes >= 60) {
+      timeToStart = `${hours}:${minutes.toString().padStart(2, '0')} hs`;
+    } else if (minutes > 0) {
+      timeToStart = `${minutes} min`;
+    } else {
+      timeToStart = false;
+    }
+
+    const startTime = startDateTime.toFormat('HH:mm');
+    const endTime = endDateTime.toFormat('HH:mm');
+
+    return {
+      today: today,
+      timeToStart: timeToStart,
+      startTime: startTime,
+      endTime: endTime,
+    };
+  };
 
   const onAction = (action) => {
     switch (action) {
@@ -76,35 +119,34 @@ const Clock = ({ shift }) => {
   const manageBreakAction = () => {
     return isOnBreak ? 'End Break' : 'Start Break';
   };
+
   const getNextShiftText = () => {
-    const endTime = DateTime.fromFormat(shift.endTime, 'HH:mm');
-    const now = DateTime.local();
-    const endTimeIsBeforeNow = endTime < now;
-    if (endTimeIsBeforeNow) {
-      return null;
+    if (shift.timeToStart) {
+      return `Your next shift starts in: ${shift.timeToStart}`;
     } else {
-      if (shift.timeToStart) {
-        return `Your next shift starts in: ${shift.timeToStart}`;
-      } else {
-        `Your shift should have started at ${shift.startTime}`;
-      }
+      return `Your shift should have started at ${shift.startTime}hs`;
     }
   };
 
   const renderNextShiftInfo = () => {
+    const endTime = DateTime.fromFormat(shift.endTime, 'HH:mm');
+    const now = DateTime.local();
+    const hasShiftEndTimePassed = endTime < now;
     if (!isClockedIn) {
-      if (shift.today) {
-        return (
-          <View style={styles.nextShiftContainer}>
-            <Text style={styles.nextShiftText}>{getNextShiftText()}</Text>
-            <Text style={styles.text}>
-              {shift.startTime} - {shift.endTime}
-            </Text>
-          </View>
-        );
-      } else {
-        return <Text style={styles.text}>There isn't scheduled shift</Text>;
-      }
+      return (
+        <View style={styles.nextShiftContainer}>
+          {!hasShiftEndTimePassed && ( // shows the shift information if the expected end time of the shift is on the future
+            <>
+              <Text style={styles.nextShiftText}>
+                {getNextShiftText(hasShiftEndTimePassed)}
+              </Text>
+              <Text style={styles.text}>
+                {`${shift.startTime}hs - ${shift.endTime}hs`}
+              </Text>
+            </>
+          )}
+        </View>
+      );
     }
   };
 
@@ -113,7 +155,11 @@ const Clock = ({ shift }) => {
       <View>
         <Text style={styles.dateText}>{currentTime}</Text>
       </View>
-      {renderNextShiftInfo()}
+      {shift.today ? (
+        renderNextShiftInfo()
+      ) : (
+        <Text style={styles.text}>There isn't scheduled shift for today</Text>
+      )}
       <View style={styles.buttonsContainer}>
         {loading ? (
           <Loading propStyles={propStyles} />

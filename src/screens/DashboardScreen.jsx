@@ -52,44 +52,6 @@ const DashboardScreen = () => {
     );
   };
 
-  const getNextShiftInfo = () => {
-    const todayISO = DateTime.local().toISODate();
-    const todayShift = shifts.find(
-      (shift) => DateTime.fromISO(shift.startDate).toISODate() === todayISO
-    );
-    if (!todayShift) {
-      return { today: false };
-    }
-    const now = DateTime.local();
-    const startDateTime = DateTime.fromISO(todayShift.startDate);
-    const endDateTime = DateTime.fromISO(todayShift.endDate);
-
-    const today = now.hasSame(startDateTime, 'day');
-
-    const diff = startDateTime.diff(now, ['hours', 'minutes']);
-    const hours = Math.floor(diff.hours);
-    const minutes = Math.round(diff.minutes % 60);
-
-    let timeToStart;
-    if (hours > 0 || minutes >= 60) {
-      timeToStart = `${hours}:${minutes.toString().padStart(2, '0')} hs`;
-    } else if (minutes > 0) {
-      timeToStart = `${minutes} min`;
-    } else {
-      timeToStart = false;
-    }
-
-    const startTime = startDateTime.toFormat('HH:mm');
-    const endTime = endDateTime.toFormat('HH:mm');
-
-    return {
-      today: today,
-      timeToStart: timeToStart,
-      startTime: startTime,
-      endTime: endTime,
-    };
-  };
-
   return (
     <>
       {loading ? (
@@ -108,7 +70,7 @@ const DashboardScreen = () => {
             />
           }
         >
-          <Clock shift={getNextShiftInfo()} />
+          <Clock shifts={shifts} />
           <ScheduleCard
             workingDays={getWorkingDays()}
             totalPayment={totalHours * hourlyRate}
