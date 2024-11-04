@@ -12,7 +12,8 @@ import { clearClock, setClock } from '../store/reducers/clock.slice';
 const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
   const userId = useSelector((state) => state.auth.userId);
-
+  const email = useSelector((state) => state.user.email);
+  console.log(email);
   const dispatch = useDispatch();
 
   const initializeToken = async () => {
@@ -29,7 +30,7 @@ const AppNavigator = () => {
 
   useEffect(() => {
     initializeToken();
-    if (token) {
+    if (token && !email) {
       initializeUser();
     } else {
       clearUser();

@@ -49,7 +49,6 @@ export const login = (email, password, setLoading) => {
           password,
         }),
       });
-
       const user = await response.json();
       const token =
         response.headers.get('Authorization')?.split(' ')[1] || null;
@@ -62,6 +61,7 @@ export const login = (email, password, setLoading) => {
       dispatch(log_in({ ...user, token }));
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       throw new Error(error.message);
     }
   };
