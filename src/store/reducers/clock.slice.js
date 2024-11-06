@@ -190,7 +190,7 @@ export const clearClock = () => {
     try {
       dispatch(clear_clock());
     } catch (error) {
-      console.log(error);
+      console.error('clock.slice, clearClock:', error);
     }
   };
 };

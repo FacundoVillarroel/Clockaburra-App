@@ -42,7 +42,7 @@ const ShiftsScreen = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error.message);
+      console.error('ShiftScreen, getShiftsFromDb :', error);
     }
   };
 

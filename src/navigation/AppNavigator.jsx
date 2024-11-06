@@ -13,7 +13,7 @@ const AppNavigator = () => {
   const token = useSelector((state) => state.auth.token);
   const userId = useSelector((state) => state.auth.userId);
   const email = useSelector((state) => state.user.email);
-  console.log(email);
+
   const dispatch = useDispatch();
 
   const initializeToken = async () => {

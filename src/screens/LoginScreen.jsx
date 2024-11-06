@@ -54,7 +54,7 @@ const LoginScreen = () => {
     } catch (error) {
       setIsLoading(false);
       Alert.alert('Error: Internal server error, please try again later');
-      console.log(error);
+      console.error('LoginScreen, handleLogin:', error);
     }
   };
 

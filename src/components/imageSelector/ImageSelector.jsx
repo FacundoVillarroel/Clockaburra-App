@@ -53,7 +53,7 @@ const ImageSelector = ({
         setModalVisible(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error('ImageSelector, onHandleImage:', error);
     }
   };
 
