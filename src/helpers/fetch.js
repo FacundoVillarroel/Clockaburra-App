@@ -35,7 +35,7 @@ const fetchDataFromDb = async (
       throw new Error('Error getting data from db: ', data);
     }
   } catch (error) {
-    console.error(error.message);
+    console.error('fetch.js, fetchDataFromDb', error);
     throw error;
   }
 };

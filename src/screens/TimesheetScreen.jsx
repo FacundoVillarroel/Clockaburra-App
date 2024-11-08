@@ -43,7 +43,7 @@ const TimesheetScreen = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      console.error('TimesheetScreen, getTimesheetFromDb:', error);
     }
   };
 

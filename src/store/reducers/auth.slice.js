@@ -95,7 +95,7 @@ export const setToken = (token) => {
         })
       );
     } catch (error) {
-      console.error('setToken: ', error);
+      console.error('authSlice.js, setToken: ', error);
     }
   };
 };
@@ -106,7 +106,7 @@ export const logout = () => {
       await deleteToken();
       dispatch(log_out());
     } catch (error) {
-      console.error('logout:', error);
+      console.error('authSlice.js, logout:', error);
     }
   };
 };

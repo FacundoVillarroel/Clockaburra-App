@@ -45,7 +45,7 @@ export const setUser = (userId, token) => {
       const { user } = await response.json();
       dispatch(set_user(user));
     } catch (error) {
-      console.error('setUser: ', error);
+      console.error('userSlice.js, setUser: ', error);
     }
   };
 };
@@ -106,7 +106,7 @@ export const updateUser = (
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error('updateUser: ', error);
+      console.error('userSlice.js, updateUser: ', error);
     }
   };
 };
@@ -116,7 +116,7 @@ export const clearUser = () => {
     try {
       dispatch(clear_user());
     } catch (error) {
-      console.error('clearUser: ', error);
+      console.error('userSlice.js, clearUser: ', error);
     }
   };
 };

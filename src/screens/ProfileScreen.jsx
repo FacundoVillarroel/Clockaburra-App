@@ -104,7 +104,7 @@ const ProfileScreen = () => {
     try {
       dispatch(logout());
     } catch (error) {
-      console.error(error);
+      console.error('ProfileScreen, logoutHandler', error);
     }
   };
 

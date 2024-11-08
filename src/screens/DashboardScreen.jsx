@@ -38,7 +38,7 @@ const DashboardScreen = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error('Dashboard Screen: ', error.message);
+      console.error('Dashboard Screen: ', error);
     }
   };
 
