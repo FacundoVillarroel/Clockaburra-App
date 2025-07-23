@@ -3,7 +3,7 @@
     "name": "Clockaburra App",
     "slug": "clockaburra_app",
     "description": "An employee app for viewing schedules, clocking in/out, and tracking hours worked",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -29,6 +29,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "edgeToEdgeEnabled": true,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -44,7 +45,7 @@
       "eas": {
         "projectId": "93c60588-26e3-4468-bbad-30db4c3cf0f4"
       },
-      "BACKEND_IP": "https://clockaburra-restful-api-production.up.railway.app"
+      "BACKEND_IP": "https://clockaburra-restful-api.vercel.app"
     }
   }
 }
