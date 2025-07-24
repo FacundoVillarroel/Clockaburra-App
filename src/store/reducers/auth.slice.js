@@ -39,6 +39,7 @@ export const login = (email, password, setLoading) => {
   return async (dispatch) => {
     try {
       setLoading(true);
+      console.log(`${BACKEND_IP}/auth/login`, email, password);
       const response = await fetch(`${BACKEND_IP}/auth/login`, {
         method: 'POST',
         headers: {
@@ -50,8 +51,11 @@ export const login = (email, password, setLoading) => {
         }),
       });
       const user = await response.json();
+      console.log('user', user);
+      console.log('response', response);
       const token =
         response.headers.get('Authorization')?.split(' ')[1] || null;
+      console.log('token', token);
       if (!token) {
         setLoading(false);
         return { isError: true, message: 'Email o contraseña inválidos' };
