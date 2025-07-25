@@ -48,7 +48,7 @@ const LoginScreen = () => {
       const response = await dispatch(
         login(values.email, values.password, setIsLoading)
       );
-      if (response.isError) {
+      if (response?.isError) {
         Alert.alert('Error', response.message);
       }
     } catch (error) {
@@ -143,6 +143,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
+    backgroundColor: '#fff',
+    color: '#000',
   },
   loginButton: {
     width: '80%',

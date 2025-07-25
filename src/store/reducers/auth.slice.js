@@ -39,7 +39,7 @@ export const login = (email, password, setLoading) => {
   return async (dispatch) => {
     try {
       setLoading(true);
-      console.log(`${BACKEND_IP}/auth/login`, email, password);
+      console.log(`Backend uri: ${BACKEND_IP}/auth/login`);
       const response = await fetch(`${BACKEND_IP}/auth/login`, {
         method: 'POST',
         headers: {
