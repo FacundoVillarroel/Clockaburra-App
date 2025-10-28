@@ -80,7 +80,9 @@ const ThisPeriodCard = ({ shifts }) => {
           ></ProgressBar>
           <View style={styles.cardContainer}>
             <Card>
-              <Text style={styles.cardText}>${hourlyRate * totalHours}</Text>
+              <Text style={styles.cardText}>
+                ${(hourlyRate * totalHours).toFixed(2)}
+              </Text>
               <Text style={styles.cardText}>Earned so far</Text>
             </Card>
             <Card>
