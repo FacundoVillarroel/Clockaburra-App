@@ -1,9 +1,9 @@
 # Clockaburra Mobile
 
 <p align="center">
-  <img src="./assets/screenshots/login.png" alt="Login" width="250"/>
-  <img src="./assets/screenshots/dashboard.png" alt="Dashboard" width="250"/>
-  <img src="./assets/screenshots/shifts.png" alt="Shifts" width="250"/>
+  <img src="assets/login.png" alt="Login" width="250"/>
+  <img src="assets/dashboard.png" alt="Dashboard" width="250"/>
+  <img src="assets/shifts.png" alt="Shifts" width="250"/>
 </p>
 
 Mobile application for the Clockaburra employee management platform.
