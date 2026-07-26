@@ -1,16 +1,16 @@
 # Clockaburra Mobile
 
-<p align="center">
-  <img src="assets/login.png" alt="Login" width="250"/>
-  <img src="assets/dashboard.png" alt="Dashboard" width="250"/>
-  <img src="assets/shifts.png" alt="Shifts" width="250"/>
-</p>
-
 Mobile application for the Clockaburra employee management platform.
 
 Clockaburra Mobile extends the Clockaburra ecosystem by providing employees with a native mobile experience. The application communicates with the same REST API as the web platform, allowing users to manage attendance, review work schedules and access their personal information from anywhere.
 
 Built with **React Native**, **Redux Toolkit**, **React Navigation** and **Firebase Authentication**.
+
+<p align="center">
+  <img src="assets/login.png" alt="Login" width="250"/>
+  <img src="assets/dashboard.png" alt="Dashboard" width="250"/>
+  <img src="assets/shifts.png" alt="Shifts" width="250"/>
+</p>
 
 ## Features
 
