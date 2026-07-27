@@ -6,6 +6,12 @@ Clockaburra Mobile extends the Clockaburra ecosystem by providing employees with
 
 Built with **React Native**, **Redux Toolkit**, **React Navigation** and **Firebase Authentication**.
 
+## Product Demo
+
+Explore the complete Clockaburra ecosystem in this short product walkthrough.
+
+🎥 [Product Walkthrough](https://www.youtube.com/watch?v=IoPG2P4DQTI)
+
 <p align="center">
   <img src="assets/login.png" alt="Login" width="250"/>
   <img src="assets/dashboard.png" alt="Dashboard" width="250"/>
