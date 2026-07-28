@@ -10,7 +10,7 @@ Built with **React Native**, **Redux Toolkit**, **React Navigation** and **Fireb
 
 Explore the complete Clockaburra ecosystem in this short product walkthrough.
 
-🎥 [Product Walkthrough](https://www.youtube.com/watch?v=IoPG2P4DQTI)
+🎥 [Product Demo](https://youtu.be/x4V3FZvUkHM)
 
 <p align="center">
   <img src="assets/login.png" alt="Login" width="250"/>
